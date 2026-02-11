@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Complete Guide to Secure API Key Sharing | API Secure</title>
+  <meta name="description" content="Learn the best practices for secure API key sharing in 2026. Browser-based encryption, zero-knowledge architecture, and how to protect credentials from compromise.">
+  <meta name="keywords" content="secure API key sharing, browser encryption, API credential management, zero-knowledge encryption, DevOps security">
+  <link rel="canonical" href="https://apisecure.app/blog/secure-api-key-sharing.html">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+  <link rel="icon" type="image/webp" href="../logo.webp">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #111118;
+      --bg-card: rgba(17, 17, 24, 0.8);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(0, 212, 255, 0.4);
+      --cyan: #00d4ff;
+      --cyan-glow: rgba(0, 212, 255, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-muted: rgba(255, 255, 255, 0.5);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--cyan-glow); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--cyan-glow); }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 0;
+      background: rgba(10, 10, 15, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .logo img { width: 32px; height: 32px; border-radius: 8px; }
+    .nav-links { display: flex; align-items: center; gap: 24px; }
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--cyan); }
+
+    .article-header {
+      padding: 140px 24px 60px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .article-category {
+      background: rgba(0, 212, 255, 0.1);
+      color: var(--cyan);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-weight: 500;
+    }
+    .article-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .article-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+    }
+
+    .article-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .article-content h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 48px 0 20px;
+      color: var(--cyan);
+    }
+    .article-content h3 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin: 32px 0 16px;
+    }
+    .article-content p {
+      margin-bottom: 20px;
+      color: var(--text-secondary);
+    }
+    .article-content ul, .article-content ol {
+      margin: 20px 0;
+      padding-left: 24px;
+    }
+    .article-content li {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+    .article-content strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .article-content code {
+      font-family: var(--font-mono);
+      background: var(--bg-secondary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: var(--cyan);
+    }
+    .article-content pre {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 24px 0;
+    }
+    .article-content pre code {
+      background: none;
+      padding: 0;
+      color: var(--text-secondary);
+    }
+
+    .cta-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px;
+      margin: 48px 0;
+      text-align: center;
+    }
+    .cta-box h3 {
+      margin-bottom: 16px;
+    }
+    .cta-box p {
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: var(--cyan-glow);
+      box-shadow: 0 0 20px var(--cyan-glow);
+    }
+
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .footer-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .article-header { padding: 120px 16px 40px; }
+      .article-content { padding: 0 16px 60px; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="nav-content">
+      <a href="../index.html" class="logo">
+        <img src="../logo.webp" alt="API Secure">
+        <span>API Secure</span>
+      </a>
+      <div class="nav-links">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../encrypt.html" class="nav-link">Encrypt</a>
+        <a href="../docs.html" class="nav-link">Docs</a>
+        <a href="index.html" class="nav-link">Blog</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="article-header">
+    <div class="article-meta">
+      <span class="article-category">Guide</span>
+      <span>February 11, 2026</span>
+      <span>8 min read</span>
+    </div>
+    <h1 class="article-title">The Complete Guide to Secure API Key Sharing</h1>
+    <p class="article-subtitle">Learn the best practices for protecting credentials in 2026 and why browser-based encryption is the future</p>
+  </header>
+
+  <article class="article-content">
+    <p>API keys are the keys to the kingdom. They grant access to payment processors, cloud infrastructure, AI models, and sensitive data. Yet most developers still share them through Slack DMs, email, or—worst of all—paste them into public chat rooms.</p>
+
+    <p>In this guide, we'll explore why traditional methods of API key sharing are broken, how modern browser-based encryption works, and why zero-knowledge architecture is becoming the gold standard for credential management.</p>
+
+    <h2>Why API Key Sharing is Dangerous</h2>
+
+    <p>Every time you paste an API key into Slack, Discord, or email, you're trusting that:</p>
+
+    <ul>
+      <li>The messaging platform won't be breached</li>
+      <li>The recipient's account won't be compromised</li>
+      <li>No one is shoulder-surfing the conversation</li>
+      <li>The key won't accidentally leak in logs or screenshots</li>
+    </ul>
+
+    <p><strong>Spoiler alert:</strong> All of these have happened. In 2023, CircleCI suffered a breach that exposed thousands of API keys. In 2024, a popular AI company's Discord was compromised, leading to stolen API credentials.</p>
+
+    <h2>The Old Solutions (And Why They Fail)</h2>
+
+    <h3>Password Managers (1Password, Bitwarden)</h3>
+
+    <p>Password managers are great for personal use, but sharing credentials creates friction:</p>
+
+    <ul>
+      <li>Both parties need accounts</li>
+      <li>Sharing requires vault permissions</li>
+      <li>One-off sharing is overkill</li>
+      <li>Not designed for AI agent workflows</li>
+    </ul>
+
+    <h3>Encrypted Messaging (Signal, PGP)</h3>
+
+    <p>While Signal provides end-to-end encryption, it still requires:</p>
+
+    <ul>
+      <li>Both parties to install apps</li>
+      <li>Phone number exchange</li>
+      <li>No programmatic access for AI agents</li>
+    </ul>
+
+    <h2>The Modern Solution: Browser-Based Encryption</h2>
+
+    <p>Enter zero-server, browser-based encryption. Tools like <strong>API Secure</strong> perform all encryption in the client's browser using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API" style="color: var(--cyan);">Web Crypto API</a>.</p>
+
+    <h3>How It Works</h3>
+
+    <ol>
+      <li><strong>Enter API key</strong> in browser-encrypted vault</li>
+      <li><strong>Auto-generate passphrase</strong> (24 random characters)</li>
+      <li><strong>Encrypt locally</strong> using AES-256-GCM</li>
+      <li><strong>Share ciphertext</strong> (SECDROP-P:...) + passphrase separately</li>
+      <li><strong>Recipient decrypts</strong> in their browser or via CLI</li>
+    </ol>
+
+    <h3>The Security Model</h3>
+
+    <pre><code>┌─────────────────────────────────────────┐
+│  Your Browser (Encryption Happens Here) │
+│                                         │
+│  API Key + Passphrase ──► AES-256-GCM  │
+│         │                               │
+│         ▼                               │
+│  SECDROP-P:base64(...)                  │
+│         │                               │
+│         ▼                               │
+│  Send via Discord/Email (Safe!)        │
+└─────────────────────────────────────────┘
+              
+┌─────────────────────────────────────────┐
+│  Our Servers                            │
+│                                         │
+│  [Nothing stored, nothing logged]       │
+│                                         │
+│  We literally cannot decrypt your data  │
+└─────────────────────────────────────────┘</code></pre>
+
+    <h2>Technical Deep Dive: AES-256-GCM</h2>
+
+    <p>API Secure uses industry-standard cryptography:</p>
+
+    <ul>
+      <li><strong>Algorithm:</strong> AES-256-GCM (Galois/Counter Mode)</li>
+      <li><strong>Key Derivation:</strong> PBKDF2-SHA256 with 100,000 iterations</li>
+      <li><strong>IV:</strong> 12 bytes (96 bits) randomly generated</li>
+      <li><strong>Salt:</strong> 16 bytes (128 bits) per encryption</li>
+      <li><strong>Authentication:</strong> 16-byte GCM auth tag</li>
+    </ul>
+
+    <p><strong>AES-256</strong> means 2^256 possible keys. To put that in perspective: if you tried one billion billion keys per second, it would take longer than the age of the universe to brute force.</p>
+
+    <h2>Use Cases</h2>
+
+    <h3>AI Agent Integration</h3>
+
+    <p>As AI agents become more prevalent, secure credential handoff is critical. API Secure enables:</p>
+
+    <ul>
+      <li>Human → AI agent API key sharing</li>
+      <li>No account creation required</li>
+      <li>Async workflow (encrypt now, decrypt later)</li>
+      <li>CLI integration for automated agents</li>
+    </ul>
+
+    <h3>DevOps & SRE Teams</h3>
+
+    <ul>
+      <li>Sharing emergency production keys</li>
+      <li>Onboarding new team members</li>
+      <li>Vendor credential exchange</li>
+      <li>Burn-after-reading ephemeral secrets</li>
+    </ul>
+
+    <h3>Open Source Maintainers</h3>
+
+    <ul>
+      <li>Receiving sponsor API keys</li>
+      <li>Sharing test credentials with contributors</li>
+      <li>No onboarding barrier for one-off shares</li>
+    </ul>
+
+    <h2>Comparison: API Secure vs Alternatives</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin: 24px 0;">
+      <thead>
+        <tr style="border-bottom: 1px solid var(--border-subtle);">
+          <th style="text-align: left; padding: 12px; color: var(--text-muted);">Feature</th>
+          <th style="text-align: center; padding: 12px; color: var(--cyan);">API Secure</th>
+          <th style="text-align: center; padding: 12px; color: var(--text-muted);">1Password</th>
+          <th style="text-align: center; padding: 12px; color: var(--text-muted);">Bitwarden Send</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid var(--border-subtle);">
+          <td style="padding: 12px;">Zero server</td>
+          <td style="text-align: center; padding: 12px;">✅</td>
+          <td style="text-align: center; padding: 12px;">❌</td>
+          <td style="text-align: center; padding: 12px;">❌</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border-subtle);">
+          <td style="padding: 12px;">No account required</td>
+          <td style="text-align: center; padding: 12px;">✅</td>
+          <td style="text-align: center; padding: 12px;">❌</td>
+          <td style="text-align: center; padding: 12px;">❌</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border-subtle);">
+          <td style="padding: 12px;">AI agent friendly</td>
+          <td style="text-align: center; padding: 12px;">✅</td>
+          <td style="text-align: center; padding: 12px;">❌</td>
+          <td style="text-align: center; padding: 12px;">❌</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px;">Open source</td>
+          <td style="text-align: center; padding: 12px;">✅</td>
+          <td style="text-align: center; padding: 12px;">❌</td>
+          <td style="text-align: center; padding: 12px;">Partial</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Getting Started</h2>
+
+    <p>Ready to upgrade your API key security? Try it now:</p>
+
+    <div class="cta-box">
+      <h3>Try API Secure for Free</h3>
+      <p>Zero accounts. Zero tracking. Open source. Forever free.</p>
+      <a href="../encrypt.html" class="btn">
+        <i data-lucide="lock"></i>
+        Encrypt Your First API Key
+      </a>
+    </div>
+
+    <h2>Conclusion</h2>
+
+    <p>Secure API key sharing doesn't have to be complicated. Browser-based, zero-knowledge encryption provides the security of enterprise tools with the simplicity of a paste service.</p>
+
+    <p>As AI agents become integral to our workflows, the ability to securely share credentials without friction will only become more important. The future of secret management is zero-server, zero-account, and fully auditable.</p>
+
+    <p><strong>Your API keys deserve better than Slack DMs.</strong></p>
+  </article>
+
+  <footer class="footer">
+    <div class="footer-text">
+      © 2026 API Secure. <a href="index.html" style="color: var(--text-muted);">← Back to Blog</a>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
