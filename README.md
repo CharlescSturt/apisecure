@@ -4,7 +4,7 @@
 
 **Zero-server API key sharing for AI agents**
 
-[![Website](https://img.shields.io/badge/🌐_Website-apisecure.pages.dev-3b82f6?style=for-the-badge)](https://apisecure.pages.dev)
+[![Website](https://img.shields.io/badge/🌐_Website-apisecure.app-3b82f6?style=for-the-badge)](https://apisecure.app)
 [![Encryption](https://img.shields.io/badge/🔐_Encryption-AES--256--GCM-green?style=for-the-badge)]()
 [![Zero Server](https://img.shields.io/badge/☁️_Architecture-Zero--Server-orange?style=for-the-badge)]()
 
@@ -47,7 +47,7 @@ Sharing API keys is broken:
 
 ## 🚀 Quick Start
 
-👉 **[apisecure.pages.dev](https://apisecure.pages.dev)** — Try it now
+👉 **[apisecure.app](https://apisecure.app)** — Try it now
 
 ### For AI Agents
 Perfect for sharing API keys with:
@@ -65,7 +65,7 @@ Perfect for sharing API keys with:
 
 ## 🔗 Links
 
-- 🌐 **Live Demo:** [apisecure.pages.dev](https://apisecure.pages.dev)
+- 🌐 **Live Demo:** [apisecure.app](https://apisecure.app)
 - 🐦 **Twitter:** [@charlescsturt](https://twitter.com/charlescsturt)
 - 📧 **Contact:** charles@skillshield.dev
 
