@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encrypt API Key — API Secure</title>
+  <meta name="description" content="Encrypt your API keys with AES-256-GCM. Zero server. Zero tracking. All encryption happens in your browser.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #111118;
+      --bg-card: rgba(17, 17, 24, 0.8);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(0, 212, 255, 0.4);
+      --cyan: #00d4ff;
+      --cyan-glow: rgba(0, 212, 255, 0.3);
+      --cyan-pulse: rgba(0, 212, 255, 0.15);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-muted: rgba(255, 255, 255, 0.5);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    ::selection { background: var(--cyan-glow); color: var(--text-primary); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--cyan-glow); }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 0;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-content { display: flex; align-items: center; justify-content: space-between; }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--cyan), #0088cc);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon i { width: 18px; height: 18px; color: white; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .nav-link:hover { color: var(--cyan); }
+
+    .main {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 100px 24px 60px;
+      overflow: hidden;
+    }
+    .particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .encrypt-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 520px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 48px;
+      backdrop-filter: blur(20px);
+      animation: fadeInUp 0.6s ease-out;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header { text-align: center; margin-bottom: 32px; }
+    .card-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(0, 212, 255, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .card-icon i { width: 32px; height: 32px; color: var(--cyan); }
+    .card-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 8px; }
+    .card-subtitle { font-size: 0.95rem; color: var(--text-secondary); }
+
+    .form-group { margin-bottom: 24px; }
+    .form-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: var(--text-secondary);
+    }
+    .form-label-hint { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+    .input-wrapper { position: relative; }
+    .form-input {
+      width: 100%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 14px 44px 14px 16px;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    .form-input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-glow); }
+    .form-input::placeholder { color: var(--text-muted); }
+    .input-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .input-toggle:hover { color: var(--cyan); background: rgba(0, 212, 255, 0.1); }
+    .input-toggle i { width: 18px; height: 18px; }
+
+    .passphrase-box {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .passphrase-value {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--cyan);
+      letter-spacing: 1px;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .passphrase-actions { display: flex; gap: 8px; }
+    .icon-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-btn:hover { color: var(--cyan); background: rgba(0, 212, 255, 0.1); }
+    .icon-btn i { width: 16px; height: 16px; }
+
+    .btn-encrypt {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: transparent;
+      border: 2px solid var(--cyan);
+      color: var(--cyan);
+      padding: 16px 32px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-encrypt::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--cyan-glow), transparent);
+      transition: left 0.5s ease;
+    }
+    .btn-encrypt:hover:not(:disabled) {
+      transform: scale(1.02);
+      background: var(--cyan-glow);
+      box-shadow: 0 0 30px var(--cyan-glow);
+    }
+    .btn-encrypt:hover:not(:disabled)::before { left: 100%; }
+    .btn-encrypt:disabled { opacity: 0.7; cursor: not-allowed; }
+    .btn-encrypt.encrypting { animation: pulse-border 1.5s ease-in-out infinite; }
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 0 0 var(--cyan-pulse); }
+      50% { box-shadow: 0 0 0 8px transparent; }
+    }
+    .btn-encrypt i { width: 20px; height: 20px; }
+
+    .progress-container {
+      margin-top: 16px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .progress-container.visible { opacity: 1; }
+    .progress-bar { height: 4px; background: var(--bg-primary); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), #0088cc); border-radius: 2px; width: 0%; transition: width 0.3s ease; }
+    .progress-text { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 8px; font-family: var(--font-mono); }
+
+    .result-section {
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border-subtle);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+      display: none;
+    }
+    .result-section.visible { opacity: 1; transform: translateY(0); display: block; }
+    .result-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .result-label-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      color: var(--success);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .result-label-badge i { width: 12px; height: 12px; }
+    .result-box { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px; position: relative; }
+    .result-value { font-family: var(--font-mono); font-size: 0.8rem; color: var(--cyan); word-break: break-all; line-height: 1.6; padding-right: 48px; }
+    .result-copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .result-copy-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0, 212, 255, 0.1); }
+    .result-copy-btn.copied { background: rgba(16, 185, 129, 0.15); border-color: var(--success); color: var(--success); }
+    .result-copy-btn i { width: 14px; height: 14px; }
+
+    .footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 24px;
+      margin-top: -20px;
+    }
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-dot { width: 4px; height: 4px; background: var(--text-muted); border-radius: 50%; }
+    .footer-badge { display: inline-flex; align-items: center; gap: 6px; color: var(--cyan); }
+    .footer-badge i { width: 12px; height: 12px; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+    .toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast i { width: 18px; height: 18px; color: var(--success); }
+
+    .spinner { width: 20px; height: 20px; border: 2px solid var(--cyan); border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .main { padding: 100px 16px 40px; }
+      .encrypt-card { padding: 32px 24px; }
+      .card-title { font-size: 1.5rem; }
+      .footer-text { flex-direction: column; gap: 8px; }
+      .footer-dot { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="https://apisecure.app" class="logo">
+          <div class="logo-icon">
+            <i data-lucide="shield-check"></i>
+          </div>
+          <span>API Secure</span>
+        </a>
+        <div class="nav-links">
+          <a href="https://apisecure.app#how-it-works" class="nav-link">How it Works</a>
+          <a href="https://apisecure.app#features" class="nav-link">Security</a>
+          <a href="https://apisecure.app#comparison" class="nav-link">Compare</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <canvas class="particle-canvas" id="particleCanvas"></canvas>
+    <div class="encrypt-card">
+      <div class="card-header">
+        <div class="card-icon">
+          <i data-lucide="lock"></i>
+        </div>
+        <h1 class="card-title">Encrypt API Key</h1>
+        <p class="card-subtitle">Secure your key with AES-256-GCM encryption</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          API Key
+          <span class="form-label-hint">Never leaves your browser</span>
+        </label>
+        <div class="input-wrapper">
+          <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-..." autocomplete="off">
+          <button class="input-toggle" id="toggleVisibility" title="Show/hide API key">
+            <i data-lucide="eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Passphrase
+          <span class="form-label-hint">Auto-generated for you</span>
+        </label>
+        <div class="passphrase-box">
+          <span class="passphrase-value mono" id="passphraseValue"></span>
+          <div class="passphrase-actions">
+            <button class="icon-btn" id="regeneratePassphrase" title="Generate new passphrase">
+              <i data-lucide="refresh-cw"></i>
+            </button>
+            <button class="icon-btn" id="copyPassphrase" title="Copy passphrase">
+              <i data-lucide="copy"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-encrypt" id="encryptBtn">
+        <i data-lucide="lock"></i>
+        <span>Encrypt</span>
+      </button>
+
+      <div class="progress-container" id="progressContainer">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">Initializing...</div>
+      </div>
+
+      <div class="result-section" id="resultSection">
+        <div class="result-label">
+          <span>Encrypted Output</span>
+          <span class="result-label-badge">
+            <i data-lucide="check-circle"></i>
+            Ready to share
+          </span>
+        </div>
+        <div class="result-box">
+          <div class="result-value" id="resultValue"></div>
+          <button class="result-copy-btn" id="copyResult">
+            <i data-lucide="copy"></i>
+            <span>Copy</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-text">
+      <span>Zero server</span>
+      <span class="footer-dot"></span>
+      <span>Zero tracking</span>
+      <span class="footer-dot"></span>
+      <span class="footer-badge">
+        <i data-lucide="shield"></i>
+        AES-256-GCM
+      </span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast">
+    <i data-lucide="check-circle"></i>
+    <span id="toastMessage">Copied to clipboard</span>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 212, 255, 0.5)';
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+    }
+
+    function drawConnections() {
+      const maxDist = 150;
+      for (let i = 0; i < particles.length; i++) {
+        let connections = 0;
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDist && connections < 3) {
+            const opacity = (1 - dist / maxDist) * 0.2;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(0, 212, 255, ${opacity})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            connections++;
+          }
+        }
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      drawConnections();
+      requestAnimationFrame(animateParticles);
+    }
+
+    resizeCanvas();
+    initParticles();
+    animateParticles();
+    window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+
+    function generatePassphrase(len = 24) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      const vals = new Uint8Array(len);
+      crypto.getRandomValues(vals);
+      for (let i = 0; i < len; i++) result += chars[vals[i] % chars.length];
+      return result;
+    }
+
+    function updatePassphrase() {
+      const phrase = generatePassphrase();
+      document.getElementById('passphraseValue').textContent = phrase;
+      return phrase;
+    }
+
+    let currentPassphrase = updatePassphrase();
+
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const toggleVis = document.getElementById('toggleVisibility');
+    const regenBtn = document.getElementById('regeneratePassphrase');
+    const copyPhraseBtn = document.getElementById('copyPassphrase');
+    const encryptBtn = document.getElementById('encryptBtn');
+    const progressCont = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const resultSection = document.getElementById('resultSection');
+    const resultValue = document.getElementById('resultValue');
+    const copyResultBtn = document.getElementById('copyResult');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMessage');
+
+    let isVisible = false;
+    toggleVis.addEventListener('click', () => {
+      isVisible = !isVisible;
+      apiKeyInput.type = isVisible ? 'text' : 'password';
+      toggleVis.innerHTML = isVisible ? '<i data-lucide="eye-off"></i>' : '<i data-lucide="eye"></i>';
+      lucide.createIcons();
+    });
+
+    regenBtn.addEventListener('click', () => {
+      currentPassphrase = updatePassphrase();
+      showToast('New passphrase generated');
+    });
+
+    copyPhraseBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(currentPassphrase);
+        showToast('Passphrase copied');
+      } catch (err) {
+        showToast('Failed to copy', true);
+      }
+    });
+
+    function showToast(msg, isError = false) {
+      toastMsg.textContent = msg;
+      toast.querySelector('i').style.color = isError ? 'var(--danger)' : 'var(--success)';
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2500);
+    }
+
+    function updateProgress(pct, text) {
+      progressFill.style.width = pct + '%';
+      progressText.textContent = text;
+    }
+
+    async function encryptApiKey() {
+      const apiKey = apiKeyInput.value.trim();
+      if (!apiKey) {
+        apiKeyInput.focus();
+        showToast('Please enter an API key', true);
+        return;
+      }
+
+      resultSection.classList.remove('visible');
+      progressCont.classList.add('visible');
+      encryptBtn.disabled = true;
+      encryptBtn.classList.add('encrypting');
+      encryptBtn.innerHTML = '<div class="spinner"></div><span>Encrypting...</span>';
+
+      try {
+        updateProgress(20, 'Deriving encryption key...');
+        await new Promise(r => setTimeout(r, 200));
+
+        const encoder = new TextEncoder();
+        const keyMat = await crypto.subtle.importKey('raw', encoder.encode(currentPassphrase), 'PBKDF2', false, ['deriveBits', 'deriveKey']);
+
+        updateProgress(40, 'Generating salt and IV...');
+        await new Promise(r => setTimeout(r, 150));
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+
+        updateProgress(60, 'Deriving AES key...');
+        await new Promise(r => setTimeout(r, 150));
+        const key = await crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+          keyMat, { name: 'AES-GCM', length: 256 }, false, ['encrypt']
+        );
+
+        updateProgress(80, 'Encrypting data...');
+        await new Promise(r => setTimeout(r, 150));
+        const ciphertext = await crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv: iv, additionalData: encoder.encode('api-key-secure-send-v1') },
+          key, encoder.encode(apiKey)
+        );
+
+        updateProgress(95, 'Formatting output...');
+        await new Promise(r => setTimeout(r, 100));
+
+        const version = new Uint8Array([1]);
+        const algo = new Uint8Array([1]);
+        const authTag = new Uint8Array(ciphertext.slice(-16));
+        const actualCipher = new Uint8Array(ciphertext.slice(0, -16));
+
+        const combined = new Uint8Array(1 + 1 + 16 + 12 + actualCipher.length + 16);
+        let offset = 0;
+        combined.set(version, offset); offset += 1;
+        combined.set(algo, offset); offset += 1;
+        combined.set(salt, offset); offset += 16;
+        combined.set(iv, offset); offset += 12;
+        combined.set(actualCipher, offset); offset += actualCipher.length;
+        combined.set(authTag, offset);
+
+        const base64 = btoa(String.fromCharCode(...combined));
+        updateProgress(100, 'Complete!');
+        await new Promise(r => setTimeout(r, 200));
+
+        resultValue.textContent = `SECDROP-P:${base64}`;
+        resultSection.classList.add('visible');
+      } catch (error) {
+        console.error('Encryption error:', error);
+        showToast('Encryption failed. Please try again.', true);
+      } finally {
+        encryptBtn.disabled = false;
+        encryptBtn.classList.remove('encrypting');
+        encryptBtn.innerHTML = '<i data-lucide="lock"></i><span>Encrypt</span>';
+        lucide.createIcons();
+        setTimeout(() => { progressCont.classList.remove('visible'); updateProgress(0, ''); }, 500);
+      }
+    }
+
+    encryptBtn.addEventListener('click', encryptApiKey);
+
+    copyResultBtn.addEventListener('click', async () => {
+      const text = resultValue.textContent;
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyResultBtn.classList.add('copied');
+        copyResultBtn.innerHTML = '<i data-lucide="check"></i><span>Copied!</span>';
+        lucide.createIcons();
+        setTimeout(() => {
+          copyResultBtn.classList.remove('copied');
+          copyResultBtn.innerHTML = '<i data-lucide="copy"></i><span>Copy</span>';
+          lucide.createIcons();
+        }, 2000);
+      } catch (err) {
+        showToast('Failed to copy', true);
+      }
+    });
+
+    apiKeyInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !encryptBtn.disabled) encryptApiKey();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        apiKeyInput.value = '';
+        resultSection.classList.remove('visible');
+        progressCont.classList.remove('visible');
+        apiKeyInput.focus();
+      }
+    });
+
+    apiKeyInput.focus();
+  </script>
+</body>
+</html>
