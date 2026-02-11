@@ -35,6 +35,27 @@ Sharing API keys is broken:
 
 **Zero servers. Zero storage. Zero trust required.**
 
+## 📸 Screenshots
+
+<div align="center">
+
+**Hero Section**
+![Hero](./screenshot-hero.png)
+
+**Encrypt API Key**
+![Encrypt](./screenshot-encrypt.png)
+
+**Compare with Alternatives**
+![Compare](./screenshot-compare.png)
+
+**Security Features**
+![Security](./screenshot-security.png)
+
+**How It Works (3 Steps)**
+![Steps](./screenshot-steps.png)
+
+</div>
+
 ## 🛡️ Security Features
 
 | Feature | Implementation |
