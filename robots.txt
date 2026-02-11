@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://apisecure.app/sitemap.xml
+
+# Optimize crawl rate
+Crawl-delay: 1
+
+# Disallow admin/preview paths (none currently)
+# Disallow: /preview/
+
+# Allow all bots to index everything
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
