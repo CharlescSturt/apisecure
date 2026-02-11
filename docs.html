@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation — API Secure</title>
+  <meta name="description" content="Complete documentation for API Secure. Learn how to encrypt API keys, integrate with AI agents, and understand the security architecture.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #111118;
+      --bg-card: rgba(17, 17, 24, 0.8);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(0, 212, 255, 0.4);
+      --cyan: #00d4ff;
+      --cyan-glow: rgba(0, 212, 255, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-muted: rgba(255, 255, 255, 0.5);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--cyan-glow); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--cyan-glow); }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 0;
+      background: rgba(10, 10, 15, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--cyan), #0088cc);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon i { width: 18px; height: 18px; color: white; }
+    .nav-links { display: flex; align-items: center; gap: 24px; }
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--cyan); }
+
+    .hero {
+      min-height: 40vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 800px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    .hero-badge i { width: 14px; height: 14px; color: var(--cyan); }
+    .hero-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .section {
+      margin-bottom: 60px;
+    }
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title i { width: 28px; height: 28px; color: var(--cyan); }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+      color: var(--cyan);
+    }
+    .card p, .card li {
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .card ul { margin-left: 20px; }
+    .card li { margin-bottom: 8px; }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+    }
+    .step-number {
+      width: 32px;
+      height: 32px;
+      background: var(--cyan);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--bg-primary);
+      flex-shrink: 0;
+    }
+    .step-content h4 {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .step-content p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .code-block {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+    .code-block .comment { color: var(--text-muted); }
+    .code-block .keyword { color: var(--cyan); }
+    .code-block .string { color: #10b981; }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .spec-item {
+      background: var(--bg-secondary);
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    .spec-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .spec-value {
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      font-size: 0.9rem;
+    }
+
+    .faq-item {
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .faq-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .faq-question {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .faq-question i { width: 18px; height: 18px; color: var(--cyan); }
+    .faq-answer {
+      color: var(--text-secondary);
+      padding-left: 26px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: var(--cyan-glow);
+      box-shadow: 0 0 20px var(--cyan-glow);
+    }
+    .btn i { width: 16px; height: 16px; }
+
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .footer-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hero { padding: 100px 16px 40px; }
+      .card { padding: 24px; }
+      .step { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="nav-content">
+      <a href="index.html" class="logo">
+        <div class="logo-icon"><i data-lucide="shield-check"></i></div>
+        <span>API Secure</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="encrypt.html" class="nav-link">Encrypt</a>
+        <a href="https://github.com/CharlescSturt/apisecure" class="nav-link">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <canvas class="particle-canvas" id="particleCanvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i data-lucide="book-open"></i>
+        <span>Documentation</span>
+      </div>
+      <h1 class="hero-title">How API Secure Works</h1>
+      <p class="hero-subtitle">Zero-server encryption for AI agents and developers</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <section class="section">
+      <h2 class="section-title"><i data-lucide="zap"></i> Quick Start</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Go to the Encryption Tool</h4>
+            <p>Visit <a href="encrypt.html" style="color: var(--cyan);">apisecure.app/encrypt.html</a></p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Enter Your API Key</h4>
+            <p>Type or paste your API key in the secure input field</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Copy the Passphrase</h4>
+            <p>A 24-character passphrase is auto-generated. Copy and save it.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Click Encrypt</h4>
+            <p>Your key is encrypted in-browser using AES-256-GCM</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h4>Share Securely</h4>
+            <p>Send the SECDROP-P:... blob + passphrase separately to the recipient</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i data-lucide="bot"></i> For AI Agents (OpenClaw Integration)</h2>
+      <div class="card">
+        <h3>Receiving Encrypted API Keys</h3>
+        <p>When someone sends you an encrypted API key via Discord:</p>
+        <div class="code-block">
+<span class="comment"># Decrypt and store to .env file</span>
+<span class="keyword">node</span> store-api-key.js <span class="string">"SECDROP-P:AgHJk3..."</span> <span class="string">"your-passphrase"</span> <span class="string">"ENV_VAR_NAME"</span>
+        </div>
+        <p>Example Discord workflow:</p>
+        <ul>
+          <li>Human: "Here's the OpenAI key: SECDROP-P:AgD5h8... Passphrase: turtle-rainbow-99"</li>
+          <li>Charles runs decrypt command</li>
+          <li>API key stored in <code>~/.openclaw/.charles-credentials.enc</code></li>
+        </ul>
+        <a href="https://github.com/CharlescSturt/apisecure/tree/main/skills/secure-drop-decrypt" class="btn" style="margin-top: 16px;">
+          <i data-lucide="github"></i>
+          View Decrypt Skill
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i data-lucide="shield"></i> Security Deep Dive</h2>
+      
+      <div class="card">
+        <h3>Why Browser-Only Encryption?</h3>
+        <p>API Secure performs all encryption in your browser using the Web Crypto API. This means:</p>
+        <ul>
+          <li><strong>Zero server storage:</strong> Your plaintext API key never touches our servers</li>
+          <li><strong>Zero-knowledge architecture:</strong> We cannot decrypt your data, even if compelled</li>
+          <li><strong>No account required:</strong> No login, no database of users, no attack surface</li>
+          <li><strong>Transparent:</strong> Open source code you can audit yourself</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Threat Model</h3>
+        <p><strong>Protects against:</strong></p>
+        <ul>
+          <li>Passive network sniffing (e.g., compromised Discord)</li>
+          <li>Server-side breaches (there is no server)</li>
+          <li>Replay attacks (unique IV + salt per encryption)</li>
+          <li>Tampering (GCM authentication tag)</li>
+        </ul>
+        <p><strong>Does NOT protect against:</strong></p>
+        <ul>
+          <li>Compromised sender/recipient devices (keyloggers, malware)</li>
+          <li>Passphrase interception (shoulder surfing, screenshares)</li>
+          <li>Clipboard history tools (clear clipboard after copying)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i data-lucide="cpu"></i> Technical Specifications</h2>
+      <div class="spec-grid">
+        <div class="spec-item">
+          <div class="spec-label">Algorithm</div>
+          <div class="spec-value">AES-256-GCM</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Key Derivation</div>
+          <div class="spec-value">PBKDF2-SHA256</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Iterations</div>
+          <div class="spec-value">100,000</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">IV Length</div>
+          <div class="spec-value">12 bytes (96 bits)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Salt Length</div>
+          <div class="spec-value">16 bytes (128 bits)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Auth Tag</div>
+          <div class="spec-value">16 bytes (GCM)</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 24px;">
+        <h3>Ciphertext Format</h3>
+        <div class="code-block">
+SECDROP-P:base64(
+  [0]       version (1 byte)
+  [1]       algorithm (1 byte: 0x01 = PBKDF2)
+  [2-17]    salt (16 bytes)
+  [18-29]   IV (12 bytes)
+  [30..-17] ciphertext
+  [-16..]   auth tag (16 bytes)
+)
+        </div>
+        <p><strong>AAD Binding:</strong> Ciphertext includes "api-key-secure-send-v1" as Additional Authenticated Data, preventing format confusion attacks.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i data-lucide="help-circle"></i> FAQ</h2>
+      
+      <div class="card">
+        <div class="faq-item">
+          <div class="faq-question">
+            <i data-lucide="shield-check"></i>
+            Is this really zero-knowledge?
+          </div>
+          <div class="faq-answer">
+            Yes. Encryption happens entirely in your browser. The passphrase is never transmitted to any server. We have no way to decrypt your data.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <i data-lucide="lock"></i>
+            Can you decrypt my data?
+          </div>
+          <div class="faq-answer">
+            No. We don't have your passphrase. Without it, AES-256-GCM ciphertext is computationally infeasible to break (would require more energy than exists in the universe).
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <i data-lucide="eye"></i>
+            Is the code audited?
+          </div>
+          <div class="faq-answer">
+            The code is open source (MIT license) and auditable by anyone. The crypto implementation uses the standard Web Crypto API, which is battle-tested in all major browsers.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <i data-lucide="alert-triangle"></i>
+            What if I lose the passphrase?
+          </div>
+          <div class="faq-answer">
+            The data is permanently unrecoverable. There is no "forgot password" feature because we don't store anything. Keep your passphrase safe.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <i data-lucide="globe"></i>
+            Browser compatibility?
+          </div>
+          <div class="faq-answer">
+            Requires a modern browser with Web Crypto API support: Chrome 37+, Firefox 34+, Safari 7+, Edge 12+. All major browsers from 2014 onwards.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <i data-lucide="github"></i>
+            Why open source the encryption?
+          </div>
+          <div class="faq-answer">
+            Kerckhoffs's Principle: Security should not rely on obscurity. Open source crypto is more secure because it can be audited by experts. The security comes from the key (passphrase), not the secrecy of the algorithm.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="text-align: center;">
+      <h2 class="section-title" style="justify-content: center;">
+        <i data-lucide="rocket"></i>
+        Ready to encrypt?
+      </h2>
+      <a href="encrypt.html" class="btn" style="font-size: 1.1rem; padding: 16px 32px;">
+        <i data-lucide="lock"></i>
+        Start Encrypting
+      </a>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-text">
+      © 2026 API Secure. Open source under MIT License.
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.radius = Math.random() * 1.5 + 0.5;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 212, 255, 0.4)';
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.min(50, Math.floor((canvas.width * canvas.height) / 25000));
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animate);
+    }
+
+    resizeCanvas();
+    initParticles();
+    animate();
+    window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+  </script>
+</body>
+</html>
