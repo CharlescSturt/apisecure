@@ -697,7 +697,7 @@
         combined.set(actualCipher, offset); offset += actualCipher.length;
         combined.set(authTag, offset);
 
-        const base64 = btoa(String.fromCharCode(...combined));
+        const base64 = btoa(Array.from(combined, byte => String.fromCharCode(byte)).join(''));
         updateProgress(100, 'Complete!');
         await new Promise(r => setTimeout(r, 200));
 
