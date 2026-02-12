@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decrypt API Key — API Secure</title>
+  <meta name="description" content="Decrypt your SECDROP API keys with AES-256-GCM. Zero server. All decryption happens in your browser.">
+  
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #111118;
+      --bg-card: rgba(17, 17, 24, 0.8);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(0, 212, 255, 0.4);
+      --cyan: #00d4ff;
+      --cyan-glow: rgba(0, 212, 255, 0.3);
+      --cyan-pulse: rgba(0, 212, 255, 0.15);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-muted: rgba(255, 255, 255, 0.5);
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    ::selection { background: var(--cyan-glow); color: var(--text-primary); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--cyan-glow); }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 0;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .logo img { width: 32px; height: 32px; border-radius: 8px; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .nav-link:hover { color: var(--cyan); }
+
+    .main {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 24px 40px;
+      position: relative;
+    }
+    .particle-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .decrypt-card {
+      position: relative;
+      z-index: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 48px;
+      width: 100%;
+      max-width: 600px;
+      backdrop-filter: blur(20px);
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .card-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(0, 212, 255, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      border: 1px solid rgba(0, 212, 255, 0.2);
+    }
+    .card-icon i { width: 32px; height: 32px; color: var(--cyan); }
+    .card-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .card-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .form-group { margin-bottom: 24px; }
+    .form-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: var(--text-secondary);
+    }
+    .form-label-hint {
+      font-weight: 400;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-left: 8px;
+    }
+
+    .input-wrapper { position: relative; }
+    .form-input {
+      width: 100%;
+      background: rgba(10, 10, 15, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px 48px 16px 16px;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      resize: vertical;
+      min-height: 56px;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px var(--cyan-glow);
+    }
+    .form-input::placeholder { color: var(--text-muted); }
+    textarea.form-input { min-height: 100px; }
+
+    .input-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .input-toggle:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+
+    .btn-decrypt {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--cyan);
+      color: var(--bg-primary);
+      border: none;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 8px;
+    }
+    .btn-decrypt:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--cyan-glow);
+    }
+    .btn-decrypt:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .btn-decrypt.decrypting {
+      background: var(--text-muted);
+    }
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .progress-container {
+      display: none;
+      margin-top: 20px;
+    }
+    .progress-container.visible { display: block; }
+    .progress-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--cyan);
+      transition: width 0.3s ease;
+    }
+    .progress-text {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .result-section {
+      display: none;
+      margin-top: 24px;
+      padding: 20px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+    }
+    .result-section.visible { display: block; }
+    .result-section.error {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+    .result-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .result-label-text {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--success);
+    }
+    .result-section.error .result-label-text { color: var(--danger); }
+    .result-label-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      background: rgba(16, 185, 129, 0.2);
+      border-radius: 100px;
+      color: var(--success);
+    }
+    .result-section.error .result-label-badge {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+    .result-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .result-value {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      word-break: break-all;
+    }
+    .result-copy-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: var(--text-primary);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .result-copy-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    .result-copy-btn.copied {
+      background: var(--success);
+      color: white;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: 14px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+    .toast.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .toast i { width: 18px; height: 18px; }
+
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .footer-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .decrypt-card { padding: 32px 24px; }
+      .card-title { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-content">
+      <a href="index.html" class="logo">
+        <img src="logo.png" alt="API Secure">
+        <span>API Secure</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="blog/" class="nav-link">Blog</a>
+        <a href="docs.html" class="nav-link">Docs</a>
+        <a href="https://github.com/CharlescSturt/apisecure" class="nav-link">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <canvas class="particle-canvas" id="particleCanvas"></canvas>
+    <div class="decrypt-card">
+      <div class="card-header">
+        <div class="card-icon">
+          <i data-lucide="unlock"></i>
+        </div>
+        <h1 class="card-title">Decrypt API Key</h1>
+        <p class="card-subtitle">Enter your SECDROP-P encrypted blob and passphrase</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Encrypted Blob</label>
+        <textarea class="form-input" id="encryptedInput" placeholder="SECDROP-P:AQE..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Passphrase</label>
+        <div class="input-wrapper">
+          <input type="password" class="form-input" id="passphraseInput" placeholder="Enter the passphrase">
+          <button class="input-toggle" id="toggleVisibility" title="Show/hide passphrase">
+            <i data-lucide="eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-decrypt" id="decryptBtn">
+        <i data-lucide="unlock"></i>
+        <span>Decrypt</span>
+      </button>
+
+      <div class="progress-container" id="progressContainer">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">Initializing...</div>
+      </div>
+
+      <div class="result-section" id="resultSection">
+        <div class="result-label">
+          <span class="result-label-text" id="resultLabelText">Decrypted API Key</span>
+          <span class="result-label-badge" id="resultLabelBadge">
+            <i data-lucide="check-circle"></i>
+            <span id="resultBadgeText">Success</span>
+          </span>
+        </div>
+        <div class="result-box">
+          <div class="result-value" id="resultValue"></div>
+          <button class="result-copy-btn" id="copyResult">
+            <i data-lucide="copy"></i>
+            <span>Copy</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-text">Zero server · Zero tracking · AES-256-GCM</div>
+  </footer>
+
+  <div class="toast" id="toast">
+    <i data-lucide="check-circle"></i>
+    <span id="toastMessage">Copied to clipboard</span>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Particle animation
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 212, 255, 0.5)';
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+    }
+
+    function drawConnections() {
+      const maxDist = 150;
+      for (let i = 0; i < particles.length; i++) {
+        let connections = 0;
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDist && connections < 3) {
+            const opacity = (1 - dist / maxDist) * 0.2;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(0, 212, 255, ${opacity})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            connections++;
+          }
+        }
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      drawConnections();
+      requestAnimationFrame(animateParticles);
+    }
+
+    resizeCanvas();
+    initParticles();
+    animateParticles();
+    window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+
+    // DOM elements
+    const encryptedInput = document.getElementById('encryptedInput');
+    const passphraseInput = document.getElementById('passphraseInput');
+    const toggleVis = document.getElementById('toggleVisibility');
+    const decryptBtn = document.getElementById('decryptBtn');
+    const progressCont = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const resultSection = document.getElementById('resultSection');
+    const resultValue = document.getElementById('resultValue');
+    const resultLabelText = document.getElementById('resultLabelText');
+    const resultLabelBadge = document.getElementById('resultLabelBadge');
+    const resultBadgeText = document.getElementById('resultBadgeText');
+    const copyResultBtn = document.getElementById('copyResult');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMessage');
+
+    let isVisible = false;
+    toggleVis.addEventListener('click', () => {
+      isVisible = !isVisible;
+      passphraseInput.type = isVisible ? 'text' : 'password';
+      toggleVis.innerHTML = isVisible ? '<i data-lucide="eye-off"></i>' : '<i data-lucide="eye"></i>';
+      lucide.createIcons();
+    });
+
+    function showToast(msg, isError = false) {
+      toastMsg.textContent = msg;
+      toast.querySelector('i').style.color = isError ? 'var(--danger)' : 'var(--success)';
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2500);
+    }
+
+    function updateProgress(pct, text) {
+      progressFill.style.width = pct + '%';
+      progressText.textContent = text;
+    }
+
+    function showResult(text, isError = false) {
+      resultValue.textContent = text;
+      resultSection.classList.add('visible');
+      if (isError) {
+        resultSection.classList.add('error');
+        resultLabelText.textContent = 'Decryption Failed';
+        resultBadgeText.textContent = 'Error';
+        resultLabelBadge.querySelector('i').setAttribute('data-lucide', 'x-circle');
+      } else {
+        resultSection.classList.remove('error');
+        resultLabelText.textContent = 'Decrypted API Key';
+        resultBadgeText.textContent = 'Success';
+        resultLabelBadge.querySelector('i').setAttribute('data-lucide', 'check-circle');
+      }
+      lucide.createIcons();
+    }
+
+    function base64ToBytes(base64) {
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    async function decryptApiKey() {
+      let ciphertext = encryptedInput.value.trim();
+      const passphrase = passphraseInput.value.trim();
+
+      if (!ciphertext) {
+        encryptedInput.focus();
+        showToast('Please enter the encrypted blob', true);
+        return;
+      }
+
+      if (!passphrase) {
+        passphraseInput.focus();
+        showToast('Please enter the passphrase', true);
+        return;
+      }
+
+      // Remove SECDROP-P: prefix if present
+      if (ciphertext.startsWith('SECDROP-P:')) {
+        ciphertext = ciphertext.slice(10);
+      }
+
+      resultSection.classList.remove('visible');
+      progressCont.classList.add('visible');
+      decryptBtn.disabled = true;
+      decryptBtn.classList.add('decrypting');
+      decryptBtn.innerHTML = '<div class="spinner"></div><span>Decrypting...</span>';
+
+      try {
+        updateProgress(20, 'Parsing encrypted data...');
+        await new Promise(r => setTimeout(r, 150));
+
+        const data = base64ToBytes(ciphertext);
+
+        updateProgress(40, 'Extracting encryption parameters...');
+        await new Promise(r => setTimeout(r, 150));
+
+        // Parse format: version[1] + algo[1] + salt[16] + iv[12] + ciphertext[N] + authTag[16]
+        const version = data[0];
+        const algoVersion = data[1];
+        
+        if (version !== 2) {
+          throw new Error(`Unsupported format version: ${version}`);
+        }
+        
+        if (algoVersion !== 1) {
+          throw new Error(`Unsupported algorithm version: ${algoVersion}`);
+        }
+
+        const salt = data.slice(2, 18);
+        const iv = data.slice(18, 30);
+        const authTag = data.slice(-16);
+        const ciphertextBytes = data.slice(30, -16);
+
+        updateProgress(60, 'Deriving decryption key...');
+        await new Promise(r => setTimeout(r, 150));
+
+        const encoder = new TextEncoder();
+        const keyMat = await crypto.subtle.importKey('raw', encoder.encode(passphrase), 'PBKDF2', false, ['deriveBits', 'deriveKey']);
+
+        const key = await crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+          keyMat, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+        );
+
+        updateProgress(80, 'Decrypting data...');
+        await new Promise(r => setTimeout(r, 150));
+
+        // Reconstruct ciphertext with auth tag for Web Crypto
+        const fullCiphertext = new Uint8Array(ciphertextBytes.length + authTag.length);
+        fullCiphertext.set(ciphertextBytes);
+        fullCiphertext.set(authTag, ciphertextBytes.length);
+
+        const plaintext = await crypto.subtle.decrypt(
+          { name: 'AES-GCM', iv: iv, additionalData: encoder.encode('api-key-secure-send-v1') },
+          key, fullCiphertext
+        );
+
+        const apiKey = new TextDecoder().decode(plaintext);
+
+        updateProgress(100, 'Complete!');
+        await new Promise(r => setTimeout(r, 200));
+
+        showResult(apiKey, false);
+      } catch (error) {
+        console.error('Decryption error:', error);
+        showResult(error.message || 'Decryption failed. Check your passphrase and try again.', true);
+      } finally {
+        decryptBtn.disabled = false;
+        decryptBtn.classList.remove('decrypting');
+        decryptBtn.innerHTML = '<i data-lucide="unlock"></i><span>Decrypt</span>';
+        lucide.createIcons();
+        setTimeout(() => { progressCont.classList.remove('visible'); updateProgress(0, ''); }, 500);
+      }
+    }
+
+    decryptBtn.addEventListener('click', decryptApiKey);
+
+    copyResultBtn.addEventListener('click', async () => {
+      const text = resultValue.textContent;
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyResultBtn.classList.add('copied');
+        copyResultBtn.innerHTML = '<i data-lucide="check"></i><span>Copied!</span>';
+        lucide.createIcons();
+        setTimeout(() => {
+          copyResultBtn.classList.remove('copied');
+          copyResultBtn.innerHTML = '<i data-lucide="copy"></i><span>Copy</span>';
+          lucide.createIcons();
+        }, 2000);
+      } catch (err) {
+        showToast('Failed to copy', true);
+      }
+    });
+  </script>
+</body>
+</html>
