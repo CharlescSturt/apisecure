@@ -683,7 +683,7 @@
         updateProgress(95, 'Formatting output...');
         await new Promise(r => setTimeout(r, 100));
 
-        const version = new Uint8Array([1]);
+        const version = new Uint8Array([2]);
         const algo = new Uint8Array([1]);
         const authTag = new Uint8Array(ciphertext.slice(-16));
         const actualCipher = new Uint8Array(ciphertext.slice(0, -16));
