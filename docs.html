@@ -349,51 +349,125 @@
   <div class="container">
     <section class="section">
       <h2 class="section-title"><i data-lucide="zap"></i> Quick Start</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h4>Go to the Encryption Tool</h4>
-            <p>Visit <a href="encrypt.html" style="color: var(--cyan);">apisecure.app/encrypt</a></p>
+      
+      <div class="card">
+        <h3>🔒 Encrypting an API Key</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Go to the Encryption Tool</h4>
+              <p>Visit <a href="encrypt.html" style="color: var(--cyan);">apisecure.app/encrypt</a></p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Enter Your API Key</h4>
+              <p>Type or paste your API key in the secure input field</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Copy the Passphrase</h4>
+              <p>A 24-character passphrase is auto-generated. Copy and save it.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>Click Encrypt</h4>
+              <p>Your key is encrypted in-browser using AES-256-GCM</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h4>Share Securely</h4>
+              <p>Send the SECDROP-P:... blob + passphrase separately to the recipient</p>
+            </div>
           </div>
         </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h4>Enter Your API Key</h4>
-            <p>Type or paste your API key in the secure input field</p>
+      </div>
+
+      <div class="card" style="margin-top: 24px;">
+        <h3>🔓 Decrypting an API Key</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Go to the Decryption Tool</h4>
+              <p>Visit <a href="decrypt.html" style="color: var(--cyan);">apisecure.app/decrypt</a></p>
+            </div>
           </div>
-        </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h4>Copy the Passphrase</h4>
-            <p>A 24-character passphrase is auto-generated. Copy and save it.</p>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Paste the Encrypted Blob</h4>
+              <p>Enter the full SECDROP-P:... ciphertext you received</p>
+            </div>
           </div>
-        </div>
-        <div class="step">
-          <div class="step-number">4</div>
-          <div class="step-content">
-            <h4>Click Encrypt</h4>
-            <p>Your key is encrypted in-browser using AES-256-GCM</p>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Enter the Passphrase</h4>
+              <p>Type the passphrase shared separately (e.g., "turtle-rainbow-99")</p>
+            </div>
           </div>
-        </div>
-        <div class="step">
-          <div class="step-number">5</div>
-          <div class="step-content">
-            <h4>Share Securely</h4>
-            <p>Send the SECDROP-P:... blob + passphrase separately to the recipient</p>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>Click Decrypt</h4>
+              <p>Your API key is decrypted in-browser and displayed</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h4>Copy and Use</h4>
+              <p>Copy the decrypted key and clear your clipboard after using it</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <section class="section">
-      <h2 class="section-title"><i data-lucide="bot"></i> For AI Agents (OpenClaw Integration)</h2>
+      <h2 class="section-title"><i data-lucide="bot"></i> For AI Agents</h2>
+      
       <div class="card">
-        <h3>Receiving Encrypted API Keys</h3>
-        <p>When someone sends you an encrypted API key via Discord:</p>
+        <h3>Option 1: Browser-Based Decryption (Recommended)</h3>
+        <p>The easiest way for AI agents to decrypt API keys is using the browser automation:</p>
         <div class="code-block">
+<span class="comment"># Use browser.act() to fill the decrypt form</span>
+browser(<span class="keyword">action</span>: <span class="string">"open"</span>, <span class="keyword">targetUrl</span>: <span class="string">"https://apisecure.app/decrypt"</span>)
+browser(<span class="keyword">action</span>: <span class="string">"act"</span>, <span class="keyword">request</span>: {
+  <span class="keyword">kind</span>: <span class="string">"type"</span>,
+  <span class="keyword">ref</span>: <span class="string">"ciphertext-input"</span>,
+  <span class="keyword">text</span>: <span class="string">"SECDROP-P:AgHJk3..."</span>
+})
+browser(<span class="keyword">action</span>: <span class="string">"act"</span>, <span class="keyword">request</span>: {
+  <span class="keyword">kind</span>: <span class="string">"type"</span>,
+  <span class="keyword">ref</span>: <span class="string">"passphrase-input"</span>,
+  <span class="keyword">text</span>: <span class="string">"your-passphrase"</span>
+})
+browser(<span class="keyword">action</span>: <span class="string">"act"</span>, <span class="keyword">request</span>: {
+  <span class="keyword">kind</span>: <span class="string">"click"</span>,
+  <span class="keyword">ref</span>: <span class="string">"decrypt-button"</span>
+})
+        </div>
+        <p><strong>Why browser-based?</strong> Zero setup, uses the official web tool, fully auditable in real-time.</p>
+      </div>
+
+      <div class="card">
+        <h3>Option 2: Node.js Decryption Skill</h3>
+        <p>For command-line workflows or automated systems, use the Node.js decrypt skill:</p>
+        <div class="code-block">
+<span class="comment"># Install the AgentSkill from GitHub</span>
+<span class="keyword">git clone</span> https://github.com/CharlescSturt/apisecure
+<span class="keyword">cd</span> apisecure
+
 <span class="comment"># Decrypt and store to .env file</span>
 <span class="keyword">node</span> store-api-key.js <span class="string">"SECDROP-P:AgHJk3..."</span> <span class="string">"your-passphrase"</span> <span class="string">"ENV_VAR_NAME"</span>
         </div>
@@ -403,6 +477,7 @@
           <li>AI Agent runs decrypt command</li>
           <li>API key stored in <code>~/.env</code></li>
         </ul>
+        <p><strong>Skill location:</strong> <a href="https://github.com/CharlescSturt/apisecure" style="color: var(--cyan);">github.com/CharlescSturt/apisecure</a></p>
         <a href="https://github.com/CharlescSturt/apisecure" class="btn" style="margin-top: 16px;">
           <i data-lucide="github"></i>
           View on GitHub
@@ -443,6 +518,103 @@
     </section>
 
     <section class="section">
+      <h2 class="section-title"><i data-lucide="unlock"></i> Browser-Based Decryption</h2>
+      
+      <div class="card">
+        <h3>How It Works</h3>
+        <p>The decryption tool at <a href="decrypt.html" style="color: var(--cyan);">/decrypt</a> provides a simple, secure way to decrypt API keys without installing any software.</p>
+        <ul>
+          <li><strong>Zero installation:</strong> Works directly in your browser</li>
+          <li><strong>Client-side only:</strong> Decryption happens locally, passphrase never leaves your device</li>
+          <li><strong>Same security:</strong> Uses identical AES-256-GCM implementation as encryption</li>
+          <li><strong>Auto-clear:</strong> Decrypted keys can be copied and automatically cleared from view</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Step-by-Step Guide</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Receive Encrypted Data</h4>
+              <p>Get both the SECDROP-P:... blob and passphrase from the sender (sent separately for security)</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Open Decrypt Page</h4>
+              <p>Navigate to <a href="decrypt.html" style="color: var(--cyan);">apisecure.app/decrypt</a> in any modern browser</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Paste Encrypted Blob</h4>
+              <p>Copy and paste the full SECDROP-P:... string into the "Encrypted API Key" field</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>Enter Passphrase</h4>
+              <p>Type the passphrase exactly as received (case-sensitive, 24 characters)</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h4>Decrypt & Copy</h4>
+              <p>Click "Decrypt" to reveal your API key, then use the "Copy" button</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">6</div>
+            <div class="step-content">
+              <h4>Clear & Close</h4>
+              <p>Clear the decrypted key from screen and clipboard when done for security</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Security Best Practices</h3>
+        <ul>
+          <li><strong>Close the tab:</strong> Don't leave decrypted keys visible on screen</li>
+          <li><strong>Clear clipboard:</strong> Copy something else after using the key</li>
+          <li><strong>Private browsing:</strong> Use incognito/private mode if on a shared device</li>
+          <li><strong>Verify sender:</strong> Only decrypt keys from trusted sources</li>
+          <li><strong>Check the blob:</strong> SECDROP-P: prefix confirms proper encryption format</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Browser Compatibility</h3>
+        <p>The decrypt page requires Web Crypto API support (available in all modern browsers since 2014):</p>
+        <div class="spec-grid" style="margin-top: 16px;">
+          <div class="spec-item">
+            <div class="spec-label">Chrome</div>
+            <div class="spec-value">37+</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Firefox</div>
+            <div class="spec-value">34+</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Safari</div>
+            <div class="spec-value">7+</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Edge</div>
+            <div class="spec-value">12+</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
       <h2 class="section-title"><i data-lucide="cpu"></i> Technical Specifications</h2>
       <div class="spec-grid">
         <div class="spec-item">
@@ -472,10 +644,10 @@
       </div>
 
       <div class="card" style="margin-top: 24px;">
-        <h3>Ciphertext Format</h3>
+        <h3>Ciphertext Format (Version 2)</h3>
         <div class="code-block">
 SECDROP-P:base64(
-  [0]       version (1 byte)
+  [0]       version (1 byte: 0x02)
   [1]       algorithm (1 byte: 0x01 = PBKDF2)
   [2-17]    salt (16 bytes)
   [18-29]   IV (12 bytes)
@@ -484,6 +656,7 @@ SECDROP-P:base64(
 )
         </div>
         <p><strong>AAD Binding:</strong> Ciphertext includes "api-key-secure-send-v1" as Additional Authenticated Data, preventing format confusion attacks.</p>
+        <p><strong>Version History:</strong> Version 2 is the current format. Version 1 is deprecated but still supported for backward compatibility.</p>
       </div>
     </section>
 
@@ -550,6 +723,18 @@ SECDROP-P:base64(
             Kerckhoffs's Principle: Security should not rely on obscurity. Open source crypto is more secure because it can be audited by experts. The security comes from the key (passphrase), not the secrecy of the algorithm.
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i data-lucide="newspaper"></i> Learn More</h2>
+      <div class="card">
+        <h3>Blog & Updates</h3>
+        <p>Stay up to date with the latest security insights, feature announcements, and technical deep dives:</p>
+        <a href="blog/" class="btn" style="margin-top: 16px;">
+          <i data-lucide="book-open"></i>
+          Visit Blog
+        </a>
       </div>
     </section>
 

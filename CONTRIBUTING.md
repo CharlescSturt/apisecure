@@ -52,12 +52,44 @@ If you discover a security vulnerability:
 git clone https://github.com/CharlescSturt/apisecure.git
 cd apisecure
 
-# Install dependencies
+# Install dependencies (for development tools)
 npm install
 
 # Start development server
 npm run dev
+
+# Or use a simple HTTP server for static files
+python3 -m http.server 8000
+# Then visit http://localhost:8000
 ```
+
+## Project Structure
+
+```
+apisecure/
+├── index.html          # Main landing page
+├── encrypt.html        # Encryption interface
+├── decrypt.html        # Decryption interface (NEW)
+├── docs.html           # Documentation page
+├── blog/               # Blog articles (NEW)
+│   ├── index.html
+│   └── secure-api-key-sharing.html
+├── app/                # Future app features
+├── README.md           # Project documentation
+├── CONTRIBUTING.md     # This file
+├── CHANGELOG.md        # Version history (NEW)
+└── CODE_OF_CONDUCT.md  # Community guidelines
+```
+
+## Testing Changes
+
+When making changes to encryption/decryption:
+
+1. **Test encrypt.html** - Encrypt a sample API key
+2. **Test decrypt.html** - Decrypt using the generated URL
+3. **Verify format version** - Ensure version 2 compatibility
+4. **Test with large keys** - Try keys >8KB to verify Base64 handling
+5. **Check browser compatibility** - Test on Chrome, Firefox, Safari
 
 ## Questions?
 
