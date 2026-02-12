@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- Primary Meta Tags -->
-  <title>API Secure — Zero-Server API Key Sharing for AI Agents</title>
-  <meta name="title" content="API Secure — Zero-Server API Key Sharing for AI Agents">
-  <meta name="description" content="The dead-simple way to share API keys with AI agents. Zero server. Zero accounts. Zero tracking. End-to-end encrypted in your browser.">
-  <meta name="keywords" content="secure API key sharing, encrypt API keys, AI agent credentials, DevOps secret sharing, browser encryption, zero-knowledge encryption">
+  <title>API Secure — Split Your Secrets. Secure Your Delivery.</title>
+  <meta name="title" content="API Secure — Split Your Secrets. Secure Your Delivery.">
+  <meta name="description" content="API Secure divides credentials into pieces that travel separately — so one compromised channel leaks nothing.">
+  <meta name="keywords" content="split-channel delivery, secure API key sharing, multi-channel encryption, DevOps secret sharing, zero-knowledge encryption">
   
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -19,43 +19,27 @@
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#00d4ff">
   
-  <!-- Open Graph Image -->
-  <meta property="og:image" content="https://apisecure.app/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:image:alt" content="API Secure - Zero-Server API Key Encryption">
-  <meta property="twitter:image" content="https://apisecure.app/og-image.png">
-  <meta property="twitter:image:alt" content="API Secure - Zero-Server API Key Encryption">
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="https://apisecure.app/">
-  
-  <!-- Sitemap -->
-  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
-  
-  <!-- Open Graph / Facebook -->
+  <!-- Open Graph / Social -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://apisecure.app/">
-  <meta property="og:title" content="API Secure — Zero-Server API Key Sharing">
-  <meta property="og:description" content="Share API keys securely with AI agents. Browser-only encryption, no server, no accounts.">
-  
-  <!-- Twitter -->
+  <meta property="og:title" content="API Secure — Split Your Secrets. Secure Your Delivery.">
+  <meta property="og:description" content="Split-channel credential delivery. No single compromise leaks your key.">
+  <meta property="og:image" content="https://apisecure.app/og-image.png">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://apisecure.app/">
-  <meta property="twitter:title" content="API Secure — Zero-Server API Key Sharing">
-  <meta property="twitter:description" content="Share API keys securely with AI agents. Browser-only encryption, no server, no accounts.">
+  <meta property="twitter:title" content="API Secure — Split Your Secrets. Secure Your Delivery.">
+  <meta property="twitter:description" content="Split-channel credential delivery. No single compromise leaks your key.">
+  <meta property="twitter:image" content="https://apisecure.app/og-image.png">
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   
   <style>
-    /* CSS Variables */
     :root {
       --bg-primary: #0a0a0f;
       --bg-secondary: #111118;
@@ -65,10 +49,11 @@
       --cyan: #00d4ff;
       --cyan-glow: rgba(0, 212, 255, 0.3);
       --cyan-pulse: rgba(0, 212, 255, 0.15);
+      --amber: #f59e0b;
+      --green: #10b981;
       --text-primary: #ffffff;
       --text-secondary: rgba(255, 255, 255, 0.7);
       --text-muted: rgba(255, 255, 255, 0.5);
-      --success: #10b981;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
     }
@@ -84,10 +69,6 @@
       min-height: 100vh;
     }
     ::selection { background: var(--cyan-glow); color: var(--text-primary); }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-primary); }
-    ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--cyan-glow); }
 
     .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
@@ -113,16 +94,7 @@
       color: var(--text-primary);
       text-decoration: none;
     }
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--cyan), #0088cc);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .logo-icon i { width: 18px; height: 18px; color: white; }
+    .logo img { width: 32px; height: 32px; border-radius: 8px; }
     .nav-links { display: flex; align-items: center; gap: 32px; }
     .nav-link {
       color: var(--text-secondary);
@@ -170,7 +142,7 @@
       position: relative;
       z-index: 1;
       text-align: center;
-      max-width: 800px;
+      max-width: 900px;
     }
     .hero-badge {
       display: inline-flex;
@@ -185,10 +157,10 @@
       margin-bottom: 32px;
       backdrop-filter: blur(10px);
     }
-    .hero-badge i { width: 14px; height: 14px; color: var(--success); }
+    .hero-badge i { width: 14px; height: 14px; color: var(--green); }
     .hero-title {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 700;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
       line-height: 1.1;
       margin-bottom: 24px;
       background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
@@ -196,17 +168,83 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .hero-title span {
+    .hero-title .split {
       color: var(--cyan);
       -webkit-text-fill-color: var(--cyan);
     }
     .hero-subtitle {
-      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-size: clamp(1.1rem, 2.2vw, 1.4rem);
       color: var(--text-secondary);
-      max-width: 600px;
-      margin: 0 auto 40px;
-      line-height: 1.6;
+      max-width: 700px;
+      margin: 0 auto 50px;
+      line-height: 1.7;
     }
+
+    /* Split Delivery Visual */
+    .split-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin: 60px 0;
+      flex-wrap: wrap;
+    }
+    .split-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .split-icon-box {
+      width: 90px;
+      height: 90px;
+      background: rgba(0, 212, 255, 0.1);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .split-icon-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px var(--cyan-glow);
+    }
+    .split-icon-box.amber {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+    .split-icon-box.green {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+    .split-icon-box i { width: 45px; height: 45px; color: var(--cyan); }
+    .split-icon-box.amber i { color: var(--amber); }
+    .split-icon-box.green i { color: var(--green); }
+    .split-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+    .split-arrow {
+      font-size: 2.5rem;
+      color: var(--cyan);
+      animation: pulse-arrow 2s ease-in-out infinite;
+    }
+    @keyframes pulse-arrow {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+    .split-branch {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
     .hero-cta-group {
       display: flex;
       align-items: center;
@@ -221,9 +259,9 @@
       background: transparent;
       border: 2px solid var(--cyan);
       color: var(--cyan);
-      padding: 16px 32px;
-      border-radius: 8px;
-      font-size: 1rem;
+      padding: 18px 36px;
+      border-radius: 10px;
+      font-size: 1.05rem;
       font-weight: 600;
       text-decoration: none;
       cursor: pointer;
@@ -259,12 +297,11 @@
       background: transparent;
       border: 1px solid var(--border-subtle);
       color: var(--text-secondary);
-      padding: 16px 32px;
-      border-radius: 8px;
-      font-size: 1rem;
+      padding: 18px 36px;
+      border-radius: 10px;
+      font-size: 1.05rem;
       font-weight: 500;
       text-decoration: none;
-      cursor: pointer;
       transition: all 0.2s ease;
     }
     .btn-secondary:hover {
@@ -274,10 +311,7 @@
 
     /* Section Styles */
     section { padding: 100px 0; position: relative; }
-    .section-header {
-      text-align: center;
-      margin-bottom: 60px;
-    }
+    .section-header { text-align: center; margin-bottom: 60px; }
     .section-label {
       display: inline-block;
       font-family: var(--font-mono);
@@ -288,31 +322,26 @@
       margin-bottom: 16px;
     }
     .section-title {
-      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-size: clamp(2rem, 4vw, 3rem);
       font-weight: 700;
       margin-bottom: 16px;
     }
     .section-subtitle {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       color: var(--text-secondary);
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
+      line-height: 1.7;
     }
 
-    /* How It Works Section */
+    /* How It Works */
     .how-it-works { background: var(--bg-secondary); }
-    .steps-container {
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
-      gap: 24px;
-      position: relative;
-      flex-wrap: wrap;
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
     }
     .step-card {
-      flex: 1;
-      min-width: 280px;
-      max-width: 340px;
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 16px;
@@ -321,12 +350,6 @@
       position: relative;
       backdrop-filter: blur(10px);
       transition: all 0.3s ease;
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    .step-card.visible {
-      opacity: 1;
-      transform: translateY(0);
     }
     .step-card:hover {
       transform: translateY(-4px);
@@ -335,24 +358,24 @@
     }
     .step-number {
       position: absolute;
-      top: -12px;
+      top: -16px;
       left: 50%;
       transform: translateX(-50%);
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       background: var(--cyan);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono);
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
       color: var(--bg-primary);
     }
     .step-icon {
-      width: 64px;
-      height: 64px;
+      width: 80px;
+      height: 80px;
       background: rgba(0, 212, 255, 0.1);
       border-radius: 16px;
       display: flex;
@@ -360,165 +383,102 @@
       justify-content: center;
       margin: 0 auto 24px;
     }
-    .step-icon i { width: 32px; height: 32px; color: var(--cyan); }
+    .step-icon i { width: 40px; height: 40px; color: var(--cyan); }
     .step-title {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: 600;
       margin-bottom: 12px;
     }
-    .step-description {
+    .step-desc {
       font-size: 0.95rem;
       color: var(--text-secondary);
-      margin-bottom: 16px;
-      line-height: 1.6;
+      line-height: 1.7;
     }
-    .step-meta {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 6px;
-      display: inline-block;
-    }
+    .step-highlight { color: var(--cyan); font-weight: 600; }
 
-    /* Trust Bar */
-    .trust-bar {
-      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-      padding: 40px 0;
-      border-top: 1px solid var(--border-subtle);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-    .trust-items {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 48px;
-      flex-wrap: wrap;
-    }
-    .trust-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
-    .trust-item i { width: 20px; height: 20px; color: var(--cyan); }
-    .trust-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0, 212, 255, 0.1);
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      padding: 8px 16px;
-      border-radius: 100px;
-      font-size: 0.85rem;
-      color: var(--cyan);
-    }
-
-    /* Features Grid */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-    }
-    .feature-card {
+    /* Comparison */
+    .comparison { background: var(--bg-primary); }
+    .comparison-table-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 28px;
-      transition: all 0.3s ease;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    .feature-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .feature-card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-2px);
-    }
-    .feature-icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(0, 212, 255, 0.1);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-    .feature-icon i { width: 20px; height: 20px; color: var(--cyan); }
-    .feature-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .feature-description {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-
-    /* Comparison Table */
-    .comparison { background: var(--bg-secondary); }
-    .comparison-table-wrapper {
-      overflow-x: auto;
       border-radius: 16px;
-      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
     }
     .comparison-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.95rem;
     }
-    .comparison-table th, .comparison-table td {
-      padding: 20px 24px;
-      text-align: left;
-      border-bottom: 1px solid var(--border-subtle);
+    .comparison-table thead tr {
+      background: rgba(0, 212, 255, 0.08);
     }
     .comparison-table th {
-      background: rgba(255, 255, 255, 0.03);
+      padding: 20px 24px;
+      text-align: left;
       font-weight: 600;
-      color: var(--text-secondary);
       font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 1px;
+      color: var(--cyan);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .comparison-table th:first-child { width: 40%; }
+    .comparison-table td {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.9rem;
     }
     .comparison-table tr:last-child td { border-bottom: none; }
-    .comparison-table tr.highlighted {
-      background: rgba(0, 212, 255, 0.08);
+    .comparison-table td:first-child {
+      font-weight: 600;
+      color: var(--text-primary);
     }
-    .comparison-table tr.highlighted td {
-      color: var(--cyan);
-      font-weight: 500;
+    .check-icon { color: var(--green); display: inline-flex; align-items: center; gap: 6px; }
+    .check-icon i { width: 18px; height: 18px; }
+    .cross-icon { color: var(--text-muted); display: inline-flex; align-items: center; gap: 6px; }
+    .cross-icon i { width: 18px; height: 18px; }
+
+    /* Pro CTA */
+    .pro-cta {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 136, 204, 0.15) 100%);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
     }
-    .comparison-table tr.strikethrough { opacity: 0.5; }
-    .comparison-table tr.strikethrough td:first-child { text-decoration: line-through; }
-    .tool-name {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .pro-cta-content {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
     }
-    .tool-icon {
-      width: 28px;
-      height: 28px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .tool-icon i { width: 14px; height: 14px; color: var(--text-muted); }
-    .comparison-table tr.highlighted .tool-icon {
+    .pro-cta-badge {
+      display: inline-block;
       background: rgba(0, 212, 255, 0.2);
+      border: 1px solid var(--cyan);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
     }
-    .comparison-table tr.highlighted .tool-icon i { color: var(--cyan); }
+    .pro-cta-title {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .pro-cta-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
 
     /* Footer */
     .footer {
-      background: var(--bg-primary);
+      background: var(--bg-secondary);
       padding: 60px 0 40px;
       border-top: 1px solid var(--border-subtle);
     }
@@ -553,159 +513,25 @@
     }
     .footer-link:hover { color: var(--cyan); }
     .footer-link i { width: 16px; height: 16px; }
-    .footer-pro {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 20px 32px;
-      margin-bottom: 32px;
-      max-width: 600px;
-    }
-    .footer-pro-title {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-    .footer-pro-text {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-    }
     .footer-copyright {
       font-size: 0.85rem;
       color: var(--text-muted);
-    }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 40px;
-      max-width: 500px;
-      width: 100%;
-      position: relative;
-    }
-    .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 6px;
-      transition: all 0.2s ease;
-    }
-    .modal-close:hover {
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.05);
-    }
-    .modal-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .modal-subtitle {
-      color: var(--text-secondary);
-      margin-bottom: 24px;
-    }
-    .form-group { margin-bottom: 20px; }
-    .form-label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 8px;
-      color: var(--text-secondary);
-    }
-    .form-input {
-      width: 100%;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 14px 16px;
-      color: var(--text-primary);
-      font-family: var(--font-mono);
-      font-size: 0.9rem;
-      transition: all 0.2s ease;
-    }
-    .form-input:focus {
-      outline: none;
-      border-color: var(--cyan);
-      box-shadow: 0 0 0 3px var(--cyan-glow);
-    }
-    .form-input::placeholder { color: var(--text-muted); }
-    .result-box {
-      background: var(--bg-primary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 16px;
-      margin-top: 20px;
-      display: none;
-    }
-    .result-box.active { display: block; }
-    .result-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-    .result-value {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--cyan);
-      word-break: break-all;
-      line-height: 1.5;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
       .nav-links { display: none; }
       .hero { padding: 120px 0 60px; }
+      .split-visual { gap: 16px; }
+      .split-arrow { font-size: 2rem; }
+      .split-branch { gap: 16px; }
       .hero-cta-group { flex-direction: column; width: 100%; }
       .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
       section { padding: 60px 0; }
-      .steps-container { flex-direction: column; align-items: center; }
-      .step-card { max-width: 100%; width: 100%; }
-      .trust-items { flex-direction: column; gap: 24px; }
-      .features-grid { grid-template-columns: 1fr; }
-      .comparison-table th, .comparison-table td { padding: 16px; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .comparison-table th, .comparison-table td { padding: 14px 16px; font-size: 0.85rem; }
       .footer-links { flex-direction: column; gap: 16px; }
     }
-
-    /* Animation Utilities */
-    .fade-in-up {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-    .fade-in-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .stagger-1 { transition-delay: 0ms; }
-    .stagger-2 { transition-delay: 100ms; }
-    .stagger-3 { transition-delay: 200ms; }
-    .stagger-4 { transition-delay: 300ms; }
   </style>
 </head>
 
@@ -714,17 +540,15 @@
   <nav class="nav">
     <div class="container">
       <div class="nav-content">
-        <a href="#" class="logo">
-          <img src="logo.png" alt="API Secure" style="width: 32px; height: 32px; border-radius: 8px;">
+        <a href="/" class="logo">
+          <img src="logo.png" alt="API Secure">
           <span>API Secure</span>
         </a>
         <div class="nav-links">
           <a href="#how-it-works" class="nav-link">How it Works</a>
-          <a href="#features" class="nav-link">Security</a>
-          <a href="blog/" class="nav-link">Blog</a>
           <a href="docs.html" class="nav-link">Docs</a>
-          <a href="encrypt.html" class="nav-link">Encrypt</a>
-          <a href="decrypt.html" class="nav-link">Decrypt</a>
+          <a href="pro.html" class="nav-link">Pro</a>
+          <a href="encrypt.html" class="nav-cta">Get Started</a>
         </div>
       </div>
     </div>
@@ -736,228 +560,172 @@
     <div class="container">
       <div class="hero-content">
         <div class="hero-badge">
-          <i data-lucide="check-circle"></i>
-          <span>Open Source & Free Forever</span>
+          <i data-lucide="shield-check"></i>
+          <span>Zero-Server Encryption • Free Forever</span>
         </div>
         <h1 class="hero-title">
-          The dead-simple way to share <span>API keys</span> with AI agents
+          <span class="split">Split</span> Your Secrets.<br>Secure Your Delivery.
         </h1>
         <p class="hero-subtitle">
-          Zero server. Zero accounts. Zero tracking. End-to-end encrypted in your browser.
+          API Secure divides credentials into pieces that travel separately — so one compromised channel leaks nothing.
         </p>
+        
+        <!-- Split Delivery Visual -->
+        <div class="split-visual">
+          <div class="split-item">
+            <div class="split-icon-box">
+              <i data-lucide="key"></i>
+            </div>
+            <span class="split-label">Your Secret</span>
+          </div>
+          
+          <div class="split-arrow">→</div>
+          
+          <div class="split-item">
+            <div class="split-icon-box">
+              <i data-lucide="scissors"></i>
+            </div>
+            <span class="split-label">Encrypt & Split</span>
+          </div>
+          
+          <div class="split-arrow">→</div>
+          
+          <div class="split-branch">
+            <div class="split-item">
+              <div class="split-icon-box amber">
+                <i data-lucide="mail"></i>
+              </div>
+              <span class="split-label">Channel A</span>
+            </div>
+            <div class="split-item">
+              <div class="split-icon-box green">
+                <i data-lucide="message-square"></i>
+              </div>
+              <span class="split-label">Channel B</span>
+            </div>
+          </div>
+        </div>
+        
         <div class="hero-cta-group">
           <a href="encrypt.html" class="btn-primary">
             <i data-lucide="lock"></i>
-            Encrypt & Share API Key
+            Encrypt & Split Now
           </a>
-          <a href="https://github.com/CharlescSturt/apisecure" target="_blank" rel="noopener" class="btn-secondary">
-            <i data-lucide="github"></i>
-            View Source on GitHub
+          <a href="#how-it-works" class="btn-secondary">
+            <i data-lucide="book-open"></i>
+            How It Works
           </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Trust Bar -->
-  <div class="trust-bar">
-    <div class="container">
-      <div class="trust-items">
-        <div class="trust-item">
-          <i data-lucide="server-off"></i>
-          <span>Zero server, zero accounts, zero tracking</span>
-        </div>
-        <div class="trust-badge">
-          <i data-lucide="zap"></i>
-          <span>Used by OpenClaw</span>
-        </div>
-        <div class="trust-item">
-          <i data-lucide="shield-check"></i>
-          <span>Auditable source</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- How It Works Section -->
+  <!-- How It Works -->
   <section class="how-it-works" id="how-it-works">
     <div class="container">
       <div class="section-header">
         <span class="section-label">How It Works</span>
-        <h2 class="section-title">Three steps to secure sharing</h2>
-        <p class="section-subtitle">No servers. No accounts. Just pure browser-based encryption.</p>
+        <h2 class="section-title">Three steps to split-channel security</h2>
+        <p class="section-subtitle">The security story is NOT encryption — it's delivery. We split your secret so no single compromise leaks your key.</p>
       </div>
-      <div class="steps-container">
-        <div class="step-card stagger-1">
+      <div class="steps-grid">
+        <div class="step-card">
           <div class="step-number">1</div>
           <div class="step-icon">
-            <i data-lucide="user"></i>
-          </div>
-          <h3 class="step-title">Human</h3>
-          <p class="step-description">Type your API key into the browser-encrypted vault. Your key never leaves your device.</p>
-          <span class="step-meta">No server sees your key</span>
-        </div>
-        <div class="step-card stagger-2">
-          <div class="step-number">2</div>
-          <div class="step-icon">
-            <i data-lucide="shield"></i>
+            <i data-lucide="lock"></i>
           </div>
           <h3 class="step-title">Encrypt</h3>
-          <p class="step-description">AES-256-GCM encryption with unique IV + salt per message. AAD bound to context.</p>
-          <span class="step-meta">Military-grade encryption</span>
+          <p class="step-desc">Your key becomes <span class="step-highlight">two pieces</span>: an encrypted blob + a passphrase. Neither is useful alone.</p>
         </div>
-        <div class="step-card stagger-3">
+        
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-icon">
+            <i data-lucide="split"></i>
+          </div>
+          <h3 class="step-title">Split Delivery</h3>
+          <p class="step-desc">Send pieces via <span class="step-highlight">different channels</span>: Discord + Signal, Email + SMS, Slack + WhatsApp — your choice.</p>
+        </div>
+        
+        <div class="step-card">
           <div class="step-number">3</div>
           <div class="step-icon">
-            <i data-lucide="bot"></i>
+            <i data-lucide="unlock"></i>
           </div>
-          <h3 class="step-title">Agent</h3>
-          <p class="step-description">AI agent receives encrypted blob, decrypts locally. Secure credential handoff complete.</p>
-          <span class="step-meta">Async, zero-knowledge</span>
+          <h3 class="step-title">Decrypt</h3>
+          <p class="step-desc">Only <span class="step-highlight">combined pieces</span> reveal the key. Intercept one channel? Get nothing. Secure handoff complete.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Security Features Section -->
-  <section class="features" id="features">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Security Features</span>
-        <h2 class="section-title">Built for paranoid developers</h2>
-        <p class="section-subtitle">Every security decision is transparent and auditable.</p>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card stagger-1">
-          <div class="feature-icon">
-            <i data-lucide="wifi-off"></i>
-          </div>
-          <h3 class="feature-title">Passive Network Sniffing Protection</h3>
-          <p class="feature-description">Even if Discord is compromised, your API keys remain encrypted and safe from eavesdroppers.</p>
-        </div>
-        <div class="feature-card stagger-2">
-          <div class="feature-icon">
-            <i data-lucide="server"></i>
-          </div>
-          <h3 class="feature-title">Server-Side Breach Immunity</h3>
-          <p class="feature-description">No server exists to breach. Everything happens in your browser. Zero attack surface.</p>
-        </div>
-        <div class="feature-card stagger-3">
-          <div class="feature-icon">
-            <i data-lucide="refresh-cw-off"></i>
-          </div>
-          <h3 class="feature-title">Replay Attack Prevention</h3>
-          <p class="feature-description">Unique IV + salt for every message ensures ciphertext is never identical twice.</p>
-        </div>
-        <div class="feature-card stagger-4">
-          <div class="feature-icon">
-            <i data-lucide="file-check"></i>
-          </div>
-          <h3 class="feature-title">Tamper Detection</h3>
-          <p class="feature-description">GCM authentication tag detects any modification to encrypted data in transit.</p>
-        </div>
-        <div class="feature-card stagger-1">
-          <div class="feature-icon">
-            <i data-lucide="link"></i>
-          </div>
-          <h3 class="feature-title">AAD Binding</h3>
-          <p class="feature-description">Context-bound ciphertext prevents format confusion attacks. Bound to "api-key-secure-send-v1".</p>
-        </div>
-        <div class="feature-card stagger-2">
-          <div class="feature-icon">
-            <i data-lucide="eye-off"></i>
-          </div>
-          <h3 class="feature-title">Zero-Knowledge Architecture</h3>
-          <p class="feature-description">We cannot decrypt your data even if compelled. Keys are derived from your passphrase locally.</p>
-        </div>
-        <div class="feature-card stagger-3">
-          <div class="feature-icon">
-            <i data-lucide="code"></i>
-          </div>
-          <h3 class="feature-title">Fully Auditable Source</h3>
-          <p class="feature-description">Every line of code is open source. Verify the encryption yourself. MIT licensed.</p>
-        </div>
-        <div class="feature-card stagger-4">
-          <div class="feature-icon">
-            <i data-lucide="zap"></i>
-          </div>
-          <h3 class="feature-title">Perfect for AI Agent Workflows</h3>
-          <p class="feature-description">Purpose-built for human → AI agent credential sharing. Async, no accounts required.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Comparison Section -->
+  <!-- Comparison -->
   <section class="comparison" id="comparison">
     <div class="container">
       <div class="section-header">
-        <span class="section-label">Why Not...</span>
-        <h2 class="section-title">Compare with alternatives</h2>
-        <p class="section-subtitle">See why developers choose API Secure for secure API key sharing.</p>
+        <span class="section-label">Free vs Pro</span>
+        <h2 class="section-title">Choose your workflow</h2>
+        <p class="section-subtitle">Free for manual split delivery. Pro for teams who need one-time links and audit trails.</p>
       </div>
       <div class="comparison-table-wrapper">
         <table class="comparison-table">
           <thead>
             <tr>
-              <th>Tool</th>
-              <th>Friction</th>
-              <th>Problem</th>
+              <th>Feature</th>
+              <th>Free</th>
+              <th>Pro</th>
             </tr>
           </thead>
           <tbody>
-            <tr class="strikethrough">
-              <td>
-                <div class="tool-name">
-                  <div class="tool-icon"><i data-lucide="key"></i></div>
-                  1Password
-                </div>
-              </td>
-              <td>$36/yr, account required</td>
-              <td>Overkill for one-off key sharing</td>
+            <tr>
+              <td>Split delivery</td>
+              <td><span class="check-icon"><i data-lucide="check"></i> Yes</span></td>
+              <td><span class="check-icon"><i data-lucide="check"></i> Yes</span></td>
             </tr>
-            <tr class="strikethrough">
-              <td>
-                <div class="tool-name">
-                  <div class="tool-icon"><i data-lucide="send"></i></div>
-                  Bitwarden Send
-                </div>
-              </td>
-              <td>Sender needs account</td>
-              <td>Onboarding barrier for AI agents</td>
+            <tr>
+              <td>Zero-server encryption</td>
+              <td><span class="check-icon"><i data-lucide="check"></i> Yes</span></td>
+              <td><span class="cross-icon"><i data-lucide="minus"></i> Server-stored</span></td>
             </tr>
-            <tr class="strikethrough">
-              <td>
-                <div class="tool-name">
-                  <div class="tool-icon"><i data-lucide="terminal"></i></div>
-                  Magic Wormhole
-                </div>
-              </td>
-              <td>CLI only, both online</td>
-              <td>Not async, not web-friendly</td>
+            <tr>
+              <td>One-time links</td>
+              <td><span class="cross-icon"><i data-lucide="x"></i> Manual only</span></td>
+              <td><span class="check-icon"><i data-lucide="check"></i> Yes</span></td>
             </tr>
-            <tr class="strikethrough">
-              <td>
-                <div class="tool-name">
-                  <div class="tool-icon"><i data-lucide="file-text"></i></div>
-                  Pastebin
-                </div>
-              </td>
-              <td>No encryption</td>
-              <td>Plaintext = compromised credentials</td>
+            <tr>
+              <td>Self-destructing</td>
+              <td><span class="cross-icon"><i data-lucide="x"></i> No</span></td>
+              <td><span class="check-icon"><i data-lucide="check"></i> Yes</span></td>
             </tr>
-            <tr class="highlighted">
-              <td>
-                <div class="tool-name">
-                  <div class="tool-icon"><i data-lucide="shield-check"></i></div>
-                  API Secure
-                </div>
-              </td>
-              <td>Zero friction. No account.</td>
-              <td>Built for this exact use case</td>
+            <tr>
+              <td>Expiry control</td>
+              <td><span class="cross-icon"><i data-lucide="x"></i> No</span></td>
+              <td><span class="check-icon"><i data-lucide="check"></i> 1h / 1d / 1w</span></td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>Personal, AI agents</td>
+              <td>Teams, DevOps</td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pro CTA -->
+  <section class="pro-cta">
+    <div class="container">
+      <div class="pro-cta-content">
+        <span class="pro-cta-badge">Coming Soon</span>
+        <h2 class="pro-cta-title">One-Time Links. Zero Exposure.</h2>
+        <p class="pro-cta-subtitle">
+          For teams who need self-destructing links, expiry timers, and compliance-ready audit trails.
+        </p>
+        <a href="pro.html" class="btn-primary">
+          <i data-lucide="zap"></i>
+          Learn About Pro
+        </a>
       </div>
     </div>
   </section>
@@ -967,44 +735,40 @@
     <div class="container">
       <div class="footer-content">
         <p class="footer-tagline">
-          <strong>Free forever.</strong> Open source. <span class="mono">MIT License</span>.
+          <strong>Free forever.</strong> Open source. MIT License.
         </p>
         <div class="footer-links">
           <a href="https://github.com/CharlescSturt/apisecure" target="_blank" rel="noopener" class="footer-link">
             <i data-lucide="github"></i>
             GitHub
           </a>
-          <a href="#" class="footer-link">
+          <a href="docs.html" class="footer-link">
             <i data-lucide="book-open"></i>
             Documentation
           </a>
-          <a href="#" class="footer-link">
-            <i data-lucide="plug"></i>
-            OpenClaw Integration
+          <a href="encrypt.html" class="footer-link">
+            <i data-lucide="lock"></i>
+            Encrypt
+          </a>
+          <a href="decrypt.html" class="footer-link">
+            <i data-lucide="unlock"></i>
+            Decrypt
           </a>
         </div>
-        <div class="footer-pro">
-          <div class="footer-pro-title">Pro Features Coming Soon</div>
-          <p class="footer-pro-text">
-            Custom branding ($5/mo), audit logs, team sharing, and self-hosted enterprise options for DevOps teams.
-          </p>
-        </div>
         <p class="footer-copyright">
-          © 2026 API Secure. Built with 🔒 for developers.
+          © 2026 API Secure. Built with 🔒 for secure delivery.
         </p>
       </div>
     </div>
   </footer>
 
   <script>
-    // Initialize Lucide Icons
     lucide.createIcons();
 
-    // ==================== Particle Animation ====================
+    // Particle Animation
     const canvas = document.getElementById('particleCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
-    let animationId;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -1070,7 +834,7 @@
         particle.draw();
       });
       drawConnections();
-      animationId = requestAnimationFrame(animateParticles);
+      requestAnimationFrame(animateParticles);
     }
 
     resizeCanvas();
@@ -1081,21 +845,7 @@
       initParticles();
     });
 
-    // ==================== Scroll Animations ====================
-    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, observerOptions);
-
-    document.querySelectorAll('.step-card, .feature-card, .fade-in-up').forEach(el => {
-      observer.observe(el);
-    });
-
-    // ==================== Smooth Scroll for Anchor Links ====================
+    // Smooth Scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
@@ -1109,19 +859,15 @@
       });
     });
 
-    // ==================== Nav Background on Scroll ====================
+    // Nav Background on Scroll
     const nav = document.querySelector('.nav');
-    let lastScroll = 0;
     window.addEventListener('scroll', () => {
-      const currentScroll = window.pageYOffset;
-      if (currentScroll > 50) {
+      if (window.pageYOffset > 50) {
         nav.style.background = 'rgba(10, 10, 15, 0.95)';
       } else {
         nav.style.background = 'rgba(10, 10, 15, 0.8)';
       }
-      lastScroll = currentScroll;
     });
   </script>
 </body>
-
 </html>

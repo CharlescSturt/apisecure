@@ -7,7 +7,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Encrypt API Key — API Secure</title>
-  <meta name="description" content="Encrypt your API keys with AES-256-GCM. Zero server. Zero tracking. All encryption happens in your browser.">
+  <meta name="description" content="Split your API key into two pieces for secure delivery. AES-256-GCM encryption in your browser.">
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,11 +27,13 @@
       --cyan: #00d4ff;
       --cyan-glow: rgba(0, 212, 255, 0.3);
       --cyan-pulse: rgba(0, 212, 255, 0.15);
+      --amber: #f59e0b;
+      --amber-glow: rgba(245, 158, 11, 0.3);
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.3);
       --text-primary: #ffffff;
       --text-secondary: rgba(255, 255, 255, 0.7);
       --text-muted: rgba(255, 255, 255, 0.5);
-      --success: #10b981;
-      --warning: #f59e0b;
       --danger: #ef4444;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
@@ -48,10 +50,6 @@
       min-height: 100vh;
     }
     ::selection { background: var(--cyan-glow); color: var(--text-primary); }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-primary); }
-    ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--cyan-glow); }
 
     .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
@@ -62,7 +60,7 @@
       right: 0;
       z-index: 100;
       padding: 16px 0;
-      background: rgba(10, 10, 15, 0.8);
+      background: rgba(10, 10, 15, 0.95);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-subtle);
     }
@@ -76,16 +74,7 @@
       color: var(--text-primary);
       text-decoration: none;
     }
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--cyan), #0088cc);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .logo-icon i { width: 18px; height: 18px; color: white; }
+    .logo img { width: 32px; height: 32px; border-radius: 8px; }
     .nav-links { display: flex; align-items: center; gap: 32px; }
     .nav-link {
       color: var(--text-secondary);
@@ -118,7 +107,7 @@
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 520px;
+      max-width: 600px;
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 20px;
@@ -131,20 +120,57 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .card-header { text-align: center; margin-bottom: 32px; }
+    .card-header { text-align: center; margin-bottom: 40px; }
     .card-icon {
-      width: 64px;
-      height: 64px;
+      width: 70px;
+      height: 70px;
       background: rgba(0, 212, 255, 0.1);
       border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px;
+      margin: 0 auto 24px;
     }
-    .card-icon i { width: 32px; height: 32px; color: var(--cyan); }
-    .card-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 8px; }
-    .card-subtitle { font-size: 0.95rem; color: var(--text-secondary); }
+    .card-icon i { width: 36px; height: 36px; color: var(--cyan); }
+    .card-title { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .card-subtitle { font-size: 1rem; color: var(--text-secondary); }
+
+    /* Steps */
+    .step-section {
+      margin-bottom: 32px;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+    .step-section.hidden { display: none; }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--cyan);
+      border-radius: 50%;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--bg-primary);
+    }
+    .step-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .step-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
 
     .form-group { margin-bottom: 24px; }
     .form-label {
@@ -190,61 +216,110 @@
     .input-toggle:hover { color: var(--cyan); background: rgba(0, 212, 255, 0.1); }
     .input-toggle i { width: 18px; height: 18px; }
 
-    .passphrase-box {
+    /* Delivery Mode Selection */
+    .mode-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .mode-card {
       background: var(--bg-primary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 14px 16px;
+      border: 2px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .mode-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .mode-card.selected {
+      border-color: var(--cyan);
+      background: rgba(0, 212, 255, 0.05);
+    }
+    .mode-card-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 12px;
+      margin-bottom: 10px;
     }
-    .passphrase-value {
-      font-family: var(--font-mono);
-      font-size: 0.9rem;
-      color: var(--cyan);
-      letter-spacing: 1px;
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .passphrase-actions { display: flex; gap: 8px; }
-    .icon-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 6px;
-      transition: all 0.2s ease;
+    .mode-radio {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border-subtle);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.2s ease;
     }
-    .icon-btn:hover { color: var(--cyan); background: rgba(0, 212, 255, 0.1); }
-    .icon-btn i { width: 16px; height: 16px; }
+    .mode-card.selected .mode-radio {
+      border-color: var(--cyan);
+      background: var(--cyan);
+    }
+    .mode-radio-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--bg-primary);
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .mode-card.selected .mode-radio-dot { opacity: 1; }
+    .mode-card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .mode-card-badge {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--green);
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: auto;
+    }
+    .mode-card-badge.pro {
+      background: rgba(0, 212, 255, 0.15);
+      border-color: rgba(0, 212, 255, 0.3);
+      color: var(--cyan);
+    }
+    .mode-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
 
-    .btn-encrypt {
+    /* Buttons */
+    .btn {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      background: transparent;
-      border: 2px solid var(--cyan);
-      color: var(--cyan);
       padding: 16px 32px;
       border-radius: 10px;
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
+      border: none;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: transparent;
+      border: 2px solid var(--cyan);
+      color: var(--cyan);
       position: relative;
       overflow: hidden;
     }
-    .btn-encrypt::before {
+    .btn-primary::before {
       content: '';
       position: absolute;
       top: 0;
@@ -254,30 +329,30 @@
       background: linear-gradient(90deg, transparent, var(--cyan-glow), transparent);
       transition: left 0.5s ease;
     }
-    .btn-encrypt:hover:not(:disabled) {
+    .btn-primary:hover:not(:disabled) {
       transform: scale(1.02);
       background: var(--cyan-glow);
       box-shadow: 0 0 30px var(--cyan-glow);
     }
-    .btn-encrypt:hover:not(:disabled)::before { left: 100%; }
-    .btn-encrypt:disabled { opacity: 0.7; cursor: not-allowed; }
-    .btn-encrypt.encrypting { animation: pulse-border 1.5s ease-in-out infinite; }
+    .btn-primary:hover:not(:disabled)::before { left: 100%; }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary.encrypting { animation: pulse-border 1.5s ease-in-out infinite; }
     @keyframes pulse-border {
       0%, 100% { box-shadow: 0 0 0 0 var(--cyan-pulse); }
       50% { box-shadow: 0 0 0 8px transparent; }
     }
-    .btn-encrypt i { width: 20px; height: 20px; }
-
-    .progress-container {
-      margin-top: 16px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+    .btn-secondary {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
     }
-    .progress-container.visible { opacity: 1; }
-    .progress-bar { height: 4px; background: var(--bg-primary); border-radius: 2px; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), #0088cc); border-radius: 2px; width: 0%; transition: width 0.3s ease; }
-    .progress-text { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 8px; font-family: var(--font-mono); }
+    .btn-secondary:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    .btn i { width: 20px; height: 20px; }
 
+    /* Result Boxes */
     .result-section {
       margin-top: 32px;
       padding-top: 32px;
@@ -288,42 +363,74 @@
       display: none;
     }
     .result-section.visible { opacity: 1; transform: translateY(0); display: block; }
-    .result-label {
+
+    .piece-box {
+      background: var(--bg-primary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .piece-box.warning {
+      border-color: var(--amber);
+      background: rgba(245, 158, 11, 0.05);
+    }
+    .piece-box.success {
+      border-color: var(--green);
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .piece-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 16px;
     }
-    .result-label-badge {
-      display: inline-flex;
+    .piece-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 212, 255, 0.1);
+      border-radius: 10px;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 4px 10px;
-      border-radius: 100px;
-      font-size: 0.7rem;
-      color: var(--success);
-      text-transform: none;
-      letter-spacing: 0;
+      justify-content: center;
     }
-    .result-label-badge i { width: 12px; height: 12px; }
-    .result-box { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px; position: relative; }
-    .result-value { font-family: var(--font-mono); font-size: 0.8rem; color: var(--cyan); word-break: break-all; line-height: 1.6; padding-right: 48px; }
-    .result-copy-btn {
+    .piece-box.warning .piece-icon { background: rgba(245, 158, 11, 0.15); }
+    .piece-box.success .piece-icon { background: rgba(16, 185, 129, 0.15); }
+    .piece-icon i { width: 22px; height: 22px; color: var(--cyan); }
+    .piece-box.warning .piece-icon i { color: var(--amber); }
+    .piece-box.success .piece-icon i { color: var(--green); }
+    .piece-title {
+      flex: 1;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .piece-value-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .piece-value {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--cyan);
+      word-break: break-all;
+      line-height: 1.6;
+      padding-right: 60px;
+    }
+    .piece-copy-btn {
       position: absolute;
       top: 12px;
       right: 12px;
-      background: var(--bg-secondary);
+      background: var(--bg-primary);
       border: 1px solid var(--border-subtle);
       color: var(--text-secondary);
       padding: 8px 14px;
       border-radius: 8px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -331,30 +438,36 @@
       align-items: center;
       gap: 6px;
     }
-    .result-copy-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0, 212, 255, 0.1); }
-    .result-copy-btn.copied { background: rgba(16, 185, 129, 0.15); border-color: var(--success); color: var(--success); }
-    .result-copy-btn i { width: 14px; height: 14px; }
+    .piece-copy-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0, 212, 255, 0.1); }
+    .piece-copy-btn.copied { background: rgba(16, 185, 129, 0.15); border-color: var(--green); color: var(--green); }
+    .piece-copy-btn i { width: 14px; height: 14px; }
+    .piece-instruction {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .piece-instruction strong { color: var(--text-primary); }
 
-    .footer {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 24px;
-      margin-top: -20px;
-    }
-    .footer-text {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--text-muted);
+    .warning-box {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      padding: 16px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
+      align-items: start;
+      gap: 12px;
+      margin-bottom: 24px;
     }
-    .footer-dot { width: 4px; height: 4px; background: var(--text-muted); border-radius: 50%; }
-    .footer-badge { display: inline-flex; align-items: center; gap: 6px; color: var(--cyan); }
-    .footer-badge i { width: 12px; height: 12px; }
+    .warning-box i { width: 20px; height: 20px; color: var(--amber); flex-shrink: 0; margin-top: 2px; }
+    .warning-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .warning-text strong { color: var(--amber); }
+
+    .spinner { width: 20px; height: 20px; border: 2px solid var(--cyan); border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .toast {
       position: fixed;
@@ -374,20 +487,17 @@
       opacity: 0;
       transition: all 0.3s ease;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
     }
     .toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .toast i { width: 18px; height: 18px; color: var(--success); }
-
-    .spinner { width: 20px; height: 20px; border: 2px solid var(--cyan); border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast i { width: 18px; height: 18px; color: var(--green); }
 
     @media (max-width: 640px) {
       .nav-links { display: none; }
       .main { padding: 100px 16px 40px; }
       .encrypt-card { padding: 32px 24px; }
-      .card-title { font-size: 1.5rem; }
-      .footer-text { flex-direction: column; gap: 8px; }
-      .footer-dot { display: none; }
+      .card-title { font-size: 1.6rem; }
+      .piece-value { font-size: 0.75rem; }
     }
   </style>
 </head>
@@ -396,16 +506,15 @@
   <nav class="nav">
     <div class="container">
       <div class="nav-content">
-        <a href="https://apisecure.app" class="logo">
-          <img src="logo.png" alt="API Secure" style="width: 32px; height: 32px; border-radius: 8px;">
+        <a href="/" class="logo">
+          <img src="logo.png" alt="API Secure">
           <span>API Secure</span>
         </a>
         <div class="nav-links">
           <a href="index.html" class="nav-link">Home</a>
-          <a href="blog/" class="nav-link">Blog</a>
           <a href="docs.html" class="nav-link">Docs</a>
+          <a href="pro.html" class="nav-link">Pro</a>
           <a href="decrypt.html" class="nav-link">Decrypt</a>
-          <a href="https://github.com/CharlescSturt/apisecure" class="nav-link">GitHub</a>
         </div>
       </div>
     </div>
@@ -418,84 +527,155 @@
         <div class="card-icon">
           <i data-lucide="lock"></i>
         </div>
-        <h1 class="card-title">Encrypt API Key</h1>
-        <p class="card-subtitle">Secure your key with AES-256-GCM encryption</p>
+        <h1 class="card-title">Encrypt & Split</h1>
+        <p class="card-subtitle">Divide your secret into two pieces for secure delivery</p>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">
-          API Key
-          <span class="form-label-hint">Never leaves your browser</span>
-        </label>
-        <div class="input-wrapper">
-          <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-..." autocomplete="off">
-          <button class="input-toggle" id="toggleVisibility" title="Show/hide API key">
-            <i data-lucide="eye"></i>
-          </button>
+      <!-- Step 1: Enter API Key -->
+      <div class="step-section" id="step1">
+        <div class="step-header">
+          <span class="step-badge">1</span>
+          <h2 class="step-title">Enter API Key</h2>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">
-          Passphrase
-          <span class="form-label-hint">Auto-generated for you</span>
-        </label>
-        <div class="passphrase-box">
-          <span class="passphrase-value mono" id="passphraseValue"></span>
-          <div class="passphrase-actions">
-            <button class="icon-btn" id="regeneratePassphrase" title="Generate new passphrase">
-              <i data-lucide="refresh-cw"></i>
-            </button>
-            <button class="icon-btn" id="copyPassphrase" title="Copy passphrase">
-              <i data-lucide="copy"></i>
+        <div class="form-group">
+          <label class="form-label">
+            API Key
+            <span class="form-label-hint">Never leaves your browser</span>
+          </label>
+          <div class="input-wrapper">
+            <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-..." autocomplete="off">
+            <button class="input-toggle" id="toggleVisibility" title="Show/hide">
+              <i data-lucide="eye"></i>
             </button>
           </div>
         </div>
+        <button class="btn btn-primary" id="continueToMode">
+          <span>Continue</span>
+          <i data-lucide="arrow-right"></i>
+        </button>
       </div>
 
-      <button class="btn-encrypt" id="encryptBtn">
-        <i data-lucide="lock"></i>
-        <span>Encrypt</span>
-      </button>
-
-      <div class="progress-container" id="progressContainer">
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
+      <!-- Step 2: Choose Delivery Mode -->
+      <div class="step-section hidden" id="step2">
+        <div class="step-header">
+          <span class="step-badge">2</span>
+          <h2 class="step-title">Choose Delivery Mode</h2>
         </div>
-        <div class="progress-text" id="progressText">Initializing...</div>
-      </div>
-
-      <div class="result-section" id="resultSection">
-        <div class="result-label">
-          <span>Encrypted Output</span>
-          <span class="result-label-badge">
-            <i data-lucide="check-circle"></i>
-            Ready to share
-          </span>
+        <p class="step-description">How do you want to deliver the encrypted pieces?</p>
+        <div class="mode-cards">
+          <div class="mode-card selected" id="modeFree" data-mode="free">
+            <div class="mode-card-header">
+              <div class="mode-radio"><div class="mode-radio-dot"></div></div>
+              <div class="mode-card-title">Free: Manual Split Delivery</div>
+              <span class="mode-card-badge">Free</span>
+            </div>
+            <p class="mode-card-desc">I'll send via two separate channels (Discord + Signal, Email + SMS, etc.)</p>
+          </div>
+          <div class="mode-card" id="modePro" data-mode="pro">
+            <div class="mode-card-header">
+              <div class="mode-radio"><div class="mode-radio-dot"></div></div>
+              <div class="mode-card-title">Pro: One-Time Link</div>
+              <span class="mode-card-badge pro">Coming Soon</span>
+            </div>
+            <p class="mode-card-desc">Generate a self-destructing link with access logs (recommended for teams)</p>
+          </div>
         </div>
-        <div class="result-box">
-          <div class="result-value" id="resultValue"></div>
-          <button class="result-copy-btn" id="copyResult">
-            <i data-lucide="copy"></i>
-            <span>Copy</span>
+        <div style="margin-top: 24px; display: flex; gap: 12px;">
+          <button class="btn btn-secondary" id="backToStep1" style="flex: 1;">
+            <i data-lucide="arrow-left"></i>
+            <span>Back</span>
           </button>
+          <button class="btn btn-primary" id="encryptBtn" style="flex: 2;">
+            <i data-lucide="lock"></i>
+            <span>Encrypt & Split</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Results (Free Mode) -->
+      <div class="result-section" id="resultsFree">
+        <div class="piece-box warning">
+          <div class="piece-header">
+            <div class="piece-icon">
+              <i data-lucide="package"></i>
+            </div>
+            <div class="piece-title">📦 PIECE A: Encrypted Blob</div>
+          </div>
+          <div class="piece-value-box">
+            <div class="piece-value" id="pieceAValue"></div>
+            <button class="piece-copy-btn" id="copyPieceA">
+              <i data-lucide="copy"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+          <p class="piece-instruction"><strong>Send via Channel A</strong> (e.g., Discord, Email, Slack)</p>
+        </div>
+
+        <div class="warning-box" id="warningBox">
+          <i data-lucide="alert-triangle"></i>
+          <div class="warning-text">
+            <strong>CRITICAL:</strong> Do not reveal Piece B until you've sent Piece A via a different channel. This is the security guarantee.
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="revealPieceB">
+          <i data-lucide="unlock"></i>
+          <span>I've sent Piece A → Reveal Piece B</span>
+        </button>
+
+        <div class="piece-box success" id="pieceBBox" style="display: none; margin-top: 24px;">
+          <div class="piece-header">
+            <div class="piece-icon">
+              <i data-lucide="key"></i>
+            </div>
+            <div class="piece-title">🔑 PIECE B: Passphrase</div>
+          </div>
+          <div class="piece-value-box">
+            <div class="piece-value" id="pieceBValue"></div>
+            <button class="piece-copy-btn" id="copyPieceB">
+              <i data-lucide="copy"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+          <p class="piece-instruction"><strong>Send via Channel B</strong> (e.g., Signal, SMS, WhatsApp) — different from Channel A</p>
+        </div>
+
+        <button class="btn btn-secondary" id="startOver" style="margin-top: 24px;">
+          <i data-lucide="refresh-cw"></i>
+          <span>Encrypt Another Key</span>
+        </button>
+      </div>
+
+      <!-- Step 3: Results (Pro Mode - Placeholder) -->
+      <div class="result-section" id="resultsPro">
+        <div class="piece-box">
+          <div class="piece-header">
+            <div class="piece-icon">
+              <i data-lucide="link"></i>
+            </div>
+            <div class="piece-title">One-Time Link</div>
+          </div>
+          <div class="piece-value-box">
+            <div class="piece-value">https://apisecure.app/d/abc123xyz789</div>
+            <button class="piece-copy-btn">
+              <i data-lucide="copy"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+          <p class="piece-instruction">
+            Link expires in: <strong>1 hour</strong><br>
+            Access logs will show who accessed this link and when.
+          </p>
+        </div>
+        <div class="warning-box">
+          <i data-lucide="info"></i>
+          <div class="warning-text">
+            <strong>Pro feature coming soon!</strong> For now, use Free mode for manual split delivery.
+          </div>
         </div>
       </div>
     </div>
   </main>
-
-  <footer class="footer">
-    <div class="footer-text">
-      <span>Zero server</span>
-      <span class="footer-dot"></span>
-      <span>Zero tracking</span>
-      <span class="footer-dot"></span>
-      <span class="footer-badge">
-        <i data-lucide="shield"></i>
-        AES-256-GCM
-      </span>
-    </div>
-  </footer>
 
   <div class="toast" id="toast">
     <i data-lucide="check-circle"></i>
@@ -505,6 +685,7 @@
   <script>
     lucide.createIcons();
 
+    // Particle animation
     const canvas = document.getElementById('particleCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -576,6 +757,7 @@
     animateParticles();
     window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
 
+    // Generate passphrase
     function generatePassphrase(len = 24) {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let result = '';
@@ -585,28 +767,34 @@
       return result;
     }
 
-    function updatePassphrase() {
-      const phrase = generatePassphrase();
-      document.getElementById('passphraseValue').textContent = phrase;
-      return phrase;
-    }
+    let currentPassphrase = generatePassphrase();
+    let encryptedBlob = '';
+    let selectedMode = 'free';
 
-    let currentPassphrase = updatePassphrase();
-
+    // DOM elements
     const apiKeyInput = document.getElementById('apiKeyInput');
     const toggleVis = document.getElementById('toggleVisibility');
-    const regenBtn = document.getElementById('regeneratePassphrase');
-    const copyPhraseBtn = document.getElementById('copyPassphrase');
+    const continueToMode = document.getElementById('continueToMode');
+    const backToStep1 = document.getElementById('backToStep1');
     const encryptBtn = document.getElementById('encryptBtn');
-    const progressCont = document.getElementById('progressContainer');
-    const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
-    const resultSection = document.getElementById('resultSection');
-    const resultValue = document.getElementById('resultValue');
-    const copyResultBtn = document.getElementById('copyResult');
+    const modeFree = document.getElementById('modeFree');
+    const modePro = document.getElementById('modePro');
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const resultsFree = document.getElementById('resultsFree');
+    const resultsPro = document.getElementById('resultsPro');
+    const pieceAValue = document.getElementById('pieceAValue');
+    const pieceBValue = document.getElementById('pieceBValue');
+    const pieceBBox = document.getElementById('pieceBBox');
+    const warningBox = document.getElementById('warningBox');
+    const revealPieceB = document.getElementById('revealPieceB');
+    const copyPieceA = document.getElementById('copyPieceA');
+    const copyPieceB = document.getElementById('copyPieceB');
+    const startOver = document.getElementById('startOver');
     const toast = document.getElementById('toast');
     const toastMsg = document.getElementById('toastMessage');
 
+    // Toggle visibility
     let isVisible = false;
     toggleVis.addEventListener('click', () => {
       isVisible = !isVisible;
@@ -615,74 +803,69 @@
       lucide.createIcons();
     });
 
-    regenBtn.addEventListener('click', () => {
-      currentPassphrase = updatePassphrase();
-      showToast('New passphrase generated');
-    });
-
-    copyPhraseBtn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(currentPassphrase);
-        showToast('Passphrase copied');
-      } catch (err) {
-        showToast('Failed to copy', true);
-      }
-    });
-
-    function showToast(msg, isError = false) {
-      toastMsg.textContent = msg;
-      toast.querySelector('i').style.color = isError ? 'var(--danger)' : 'var(--success)';
-      toast.classList.add('visible');
-      setTimeout(() => toast.classList.remove('visible'), 2500);
-    }
-
-    function updateProgress(pct, text) {
-      progressFill.style.width = pct + '%';
-      progressText.textContent = text;
-    }
-
-    async function encryptApiKey() {
+    // Continue to mode selection
+    continueToMode.addEventListener('click', () => {
       const apiKey = apiKeyInput.value.trim();
       if (!apiKey) {
         apiKeyInput.focus();
         showToast('Please enter an API key', true);
         return;
       }
+      step1.classList.add('hidden');
+      step2.classList.remove('hidden');
+    });
 
-      resultSection.classList.remove('visible');
-      progressCont.classList.add('visible');
+    // Back to step 1
+    backToStep1.addEventListener('click', () => {
+      step2.classList.add('hidden');
+      step1.classList.remove('hidden');
+    });
+
+    // Mode selection
+    [modeFree, modePro].forEach(card => {
+      card.addEventListener('click', () => {
+        [modeFree, modePro].forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedMode = card.dataset.mode;
+      });
+    });
+
+    // Encrypt button
+    encryptBtn.addEventListener('click', async () => {
+      if (selectedMode === 'pro') {
+        showToast('Pro mode coming soon! Use Free mode for now.', true);
+        return;
+      }
+      await encryptApiKey();
+    });
+
+    // Encryption function
+    async function encryptApiKey() {
+      const apiKey = apiKeyInput.value.trim();
+      if (!apiKey) {
+        showToast('Please enter an API key', true);
+        return;
+      }
+
       encryptBtn.disabled = true;
-      encryptBtn.classList.add('encrypting');
       encryptBtn.innerHTML = '<div class="spinner"></div><span>Encrypting...</span>';
 
       try {
-        updateProgress(20, 'Deriving encryption key...');
-        await new Promise(r => setTimeout(r, 200));
-
         const encoder = new TextEncoder();
         const keyMat = await crypto.subtle.importKey('raw', encoder.encode(currentPassphrase), 'PBKDF2', false, ['deriveBits', 'deriveKey']);
 
-        updateProgress(40, 'Generating salt and IV...');
-        await new Promise(r => setTimeout(r, 150));
         const salt = crypto.getRandomValues(new Uint8Array(16));
         const iv = crypto.getRandomValues(new Uint8Array(12));
 
-        updateProgress(60, 'Deriving AES key...');
-        await new Promise(r => setTimeout(r, 150));
         const key = await crypto.subtle.deriveKey(
           { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
           keyMat, { name: 'AES-GCM', length: 256 }, false, ['encrypt']
         );
 
-        updateProgress(80, 'Encrypting data...');
-        await new Promise(r => setTimeout(r, 150));
         const ciphertext = await crypto.subtle.encrypt(
           { name: 'AES-GCM', iv: iv, additionalData: encoder.encode('api-key-secure-send-v1') },
           key, encoder.encode(apiKey)
         );
-
-        updateProgress(95, 'Formatting output...');
-        await new Promise(r => setTimeout(r, 100));
 
         const version = new Uint8Array([2]);
         const algo = new Uint8Array([1]);
@@ -699,54 +882,81 @@
         combined.set(authTag, offset);
 
         const base64 = btoa(Array.from(combined, byte => String.fromCharCode(byte)).join(''));
-        updateProgress(100, 'Complete!');
-        await new Promise(r => setTimeout(r, 200));
+        encryptedBlob = `SECDROP-P:${base64}`;
 
-        resultValue.textContent = `SECDROP-P:${base64}`;
-        resultSection.classList.add('visible');
+        pieceAValue.textContent = encryptedBlob;
+        pieceBValue.textContent = currentPassphrase;
+
+        step2.classList.add('hidden');
+        resultsFree.classList.add('visible');
+        
+        showToast('Encryption complete!');
       } catch (error) {
         console.error('Encryption error:', error);
         showToast('Encryption failed. Please try again.', true);
       } finally {
         encryptBtn.disabled = false;
-        encryptBtn.classList.remove('encrypting');
-        encryptBtn.innerHTML = '<i data-lucide="lock"></i><span>Encrypt</span>';
+        encryptBtn.innerHTML = '<i data-lucide="lock"></i><span>Encrypt & Split</span>';
         lucide.createIcons();
-        setTimeout(() => { progressCont.classList.remove('visible'); updateProgress(0, ''); }, 500);
       }
     }
 
-    encryptBtn.addEventListener('click', encryptApiKey);
+    // Reveal Piece B
+    revealPieceB.addEventListener('click', () => {
+      pieceBBox.style.display = 'block';
+      warningBox.style.display = 'none';
+      revealPieceB.style.display = 'none';
+      showToast('Piece B revealed. Send via different channel!');
+    });
 
-    copyResultBtn.addEventListener('click', async () => {
-      const text = resultValue.textContent;
-      if (!text) return;
+    // Copy functions
+    async function copyToClipboard(text, button) {
       try {
         await navigator.clipboard.writeText(text);
-        copyResultBtn.classList.add('copied');
-        copyResultBtn.innerHTML = '<i data-lucide="check"></i><span>Copied!</span>';
+        const originalHTML = button.innerHTML;
+        button.classList.add('copied');
+        button.innerHTML = '<i data-lucide="check"></i><span>Copied!</span>';
         lucide.createIcons();
         setTimeout(() => {
-          copyResultBtn.classList.remove('copied');
-          copyResultBtn.innerHTML = '<i data-lucide="copy"></i><span>Copy</span>';
+          button.classList.remove('copied');
+          button.innerHTML = originalHTML;
           lucide.createIcons();
         }, 2000);
       } catch (err) {
         showToast('Failed to copy', true);
       }
+    }
+
+    copyPieceA.addEventListener('click', () => copyToClipboard(encryptedBlob, copyPieceA));
+    copyPieceB.addEventListener('click', () => copyToClipboard(currentPassphrase, copyPieceB));
+
+    // Start over
+    startOver.addEventListener('click', () => {
+      apiKeyInput.value = '';
+      currentPassphrase = generatePassphrase();
+      encryptedBlob = '';
+      selectedMode = 'free';
+      
+      resultsFree.classList.remove('visible');
+      pieceBBox.style.display = 'none';
+      warningBox.style.display = 'flex';
+      revealPieceB.style.display = 'flex';
+      
+      step1.classList.remove('hidden');
+      apiKeyInput.focus();
     });
 
+    // Toast
+    function showToast(msg, isError = false) {
+      toastMsg.textContent = msg;
+      toast.querySelector('i').style.color = isError ? 'var(--danger)' : 'var(--green)';
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2500);
+    }
+
+    // Keyboard shortcuts
     apiKeyInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !encryptBtn.disabled) encryptApiKey();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        apiKeyInput.value = '';
-        resultSection.classList.remove('visible');
-        progressCont.classList.remove('visible');
-        apiKeyInput.focus();
-      }
+      if (e.key === 'Enter' && !continueToMode.disabled) continueToMode.click();
     });
 
     apiKeyInput.focus();
